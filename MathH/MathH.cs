@@ -160,9 +160,145 @@ public static class Maths
 
     #endregion
 
+    public static double Factorial(double num)
+    {
+        double f;
+
+        if (num == 0 || num == 1)
+            return 1;
+
+        else
+            f = num * Factorial(num - 1);
+
+        return f;
+    }
+
+    public static double Power(double x, int y)
+    {
+        double pow = 1;
+        bool NGPow = false;
+
+        if(y < 0)
+        {
+            y *= -1;
+            NGPow = true;
+        }
+
+        while (y > 0)
+        {
+            pow *= x;
+            --y;
+        }
+
+        if (NGPow)
+            return 1 / pow;
+
+        return pow;
+    }
+
     #region Trigonometric functions.
 
-        
+    /// <summary>
+    /// Returns the sine value of the Double-precision floating-point given angle.
+    /// </summary>
+    /// <param name="angle">Double-precision floating-point angle mesured in radians.</param>
+    /// <returns>
+    /// A double-precision floating-point number, x, such that -1 ≤ x ≤ 1. Returns System.Double.Nan, if x equals System.Double.Nan, or System.Double.Negative infinity, or System.Double.PositiveInfinity
+    /// </returns>
+    public static double Sin(double angle)
+    {
+        if(angle == System.Double.PositiveInfinity || angle == System.Double.NegativeInfinity || angle == System.Double.NaN)
+            return System.Double.NaN;
+
+        double sum = 0;
+
+        for(int i = 0; i < 100; i++)
+        {
+            if(i % 2 == 0)
+                sum += Power((double)angle, 2 * i + 1) / (double)Factorial(2 * i + 1);
+
+            else
+                sum -= Power((double)angle, 2 * i + 1) / (double)Factorial(2 * i + 1);
+        }
+
+        if(Abs(sum - 0) < 1E-10)
+            return 0;
+
+        if (Abs(sum - 1) < 1E-10)
+            return 1;
+
+        if (Abs(sum - 1) < -1E-10)
+            return -1;
+
+        return sum;
+    }
+
+    /// <summary>
+    /// Returns the cosine value of the Double-precision floating-point given angle.
+    /// </summary>
+    /// <param name="angle">Double-precision floating-point angle mesured in radians.</param>
+    /// <returns>
+    /// A double-precision floating-point number, x, such that -1 ≤ x ≤ 1. Returns System.Double.Nan, if x equals System.Double.Nan, or System.Double.Negative infinity, or System.Double.PositiveInfinity
+    /// </returns>
+    public static double Cos(double angle)
+    {
+        if (angle == System.Double.PositiveInfinity || angle == System.Double.NegativeInfinity || angle == System.Double.NaN)
+            return System.Double.NaN;
+
+        double sum = 0;
+
+        for (int i = 0; i < 100; i++)
+        {
+            if (i % 2 == 0)
+                sum += Power((double)angle, 2 * i) / (double)Factorial(2 * i);
+
+            else
+                sum -= Power((double)angle, 2 * i) / (double)Factorial(2 * i);
+        }
+
+        if (Abs(sum - 0) < 1E-10)
+            return 0;
+
+        if (Abs(sum - 1) < 1E-10)
+            return 1;
+
+        if (Abs(sum - 1) > -1E-10)
+            return -1;
+
+        return sum;
+    }
+
+    /// <summary>
+    /// Returns the tangent value of the Double-precision floating-point given angle.
+    /// </summary>
+    /// <param name="angle">Double-precision floating-point angle mesured in radians.</param>
+    /// <returns>
+    /// A double-precision floating-point number, x. 
+    /// </returns>
+    public static double Tan(double angle)
+        => Sin(angle) / Cos(angle);
+
+    /// <summary>
+    /// Returns the cotangent value of the Double-precision floating-point given angle.
+    /// </summary>
+    /// <param name="angle">Double-precision floating-point angle mesured in radians.</param>
+    /// <returns>
+    /// A double-precision floating-point number, x.
+    /// </returns>
+    public static double Cot(double angle)
+        => Sin(angle) / Cos(angle);
+
+    /// <summary>
+    /// Returns the arcsine value of the Double-precision floating-point given angle.
+    /// </summary>
+    /// <param name="angle">Double-precision floating-point angle mesured in radians.</param>
+    /// <returns>
+    /// A double-precision floating-point number, x.
+    /// </returns>
+    public static double Asin(double angle)
+        => 1 / Sin(angle);
+          
+
     #endregion
 }
 
