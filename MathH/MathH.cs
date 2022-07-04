@@ -36,7 +36,7 @@ public static class Consts
 public static class Maths
 {
     
-    #region Absolute value.
+    #region Absolute value functions.
 
     /// <summary>
     ///     Returns the absolute value of a System.Decimal number.
@@ -160,6 +160,13 @@ public static class Maths
 
     #endregion
 
+    #region Useful functions.
+
+    /// <summary>
+    /// Returns the factorial value of a double-point floating-value number.
+    /// </summary>
+    /// <param name="num">Double-point floating-value number.</param>
+    /// <returns>Returns a double-point floating-value number.</returns>
     public static double Factorial(double num)
     {
         double f;
@@ -173,6 +180,12 @@ public static class Maths
         return f;
     }
 
+    /// <summary>
+    /// Returns the number x raised to power y.
+    /// </summary>
+    /// <param name="x">Power base.</param>
+    /// <param name="y">Power.</param>
+    /// <returns>Returns double-point floating-value number.</returns>
     public static double Power(double x, int y)
     {
         double pow = 1;
@@ -196,6 +209,41 @@ public static class Maths
         return pow;
     }
 
+    /// <summary>
+    /// Returns the square root of the given number.
+    /// </summary>
+    /// <param name="num">The number whose square root want to be found.</param>
+    /// <returns>Returns a double-precision floating-point number, representing the square root of the given number.
+    /// Returns System.Double.NaN if num equals System.Double.Nan or is smaller than zero.</returns>
+    public static double Sqrt(double num)
+    {
+        if (num == System.Double.NaN || num < 0)
+            return System.Double.NaN;
+
+        if (num == System.Double.PositiveInfinity)
+            return System.Double.PositiveInfinity;
+
+        double sum = num;
+
+        for (int i = 0; i < 542; i++)
+        {   
+            sum = (sum + (num / sum));
+            sum *= 0.5;
+        }
+
+        return sum;
+    }
+
+    /// <summary>
+    /// Converts given number in degrees to radians.
+    /// </summary>
+    /// <param name="num">Double-precision floating-point number mesured in degrees.</param>
+    /// <returns>Returns a double-precision floating-point number in radians. Returns System.Double.NaN if num was equal to System.Double.NaN</returns>
+    public static double ToRadian(this double num)
+        => Consts.PI * num / 180;
+
+    #endregion
+
     #region Trigonometric functions.
 
     /// <summary>
@@ -203,7 +251,7 @@ public static class Maths
     /// </summary>
     /// <param name="angle">Double-precision floating-point angle mesured in radians.</param>
     /// <returns>
-    /// A double-precision floating-point number, x, such that -1 ≤ x ≤ 1. Returns System.Double.Nan, if x equals System.Double.Nan, or System.Double.Negative infinity, or System.Double.PositiveInfinity
+    /// A double-precision floating-point number, x, such that -1 ≤ x ≤ 1. Returns System.Double.NaN, if x equals System.Double.NaN, or System.Double.Negative infinity, or System.Double.PositiveInfinity
     /// </returns>
     public static double Sin(double angle)
     {
@@ -221,13 +269,13 @@ public static class Maths
                 sum -= Power((double)angle, 2 * i + 1) / (double)Factorial(2 * i + 1);
         }
 
-        if(Abs(sum - 0) < 1E-10)
+        if(Abs(sum - 0) < 10E-20)
             return 0;
 
-        if (Abs(sum - 1) < 1E-10)
+        if (Abs(sum - 1) < 10E-10)
             return 1;
 
-        if (Abs(sum - 1) < -1E-10)
+        if (Abs(sum - 1) < -10E-10)
             return -1;
 
         return sum;
@@ -238,7 +286,7 @@ public static class Maths
     /// </summary>
     /// <param name="angle">Double-precision floating-point angle mesured in radians.</param>
     /// <returns>
-    /// A double-precision floating-point number, x, such that -1 ≤ x ≤ 1. Returns System.Double.Nan, if x equals System.Double.Nan, or System.Double.Negative infinity, or System.Double.PositiveInfinity
+    /// A double-precision floating-point number, x, such that -1 ≤ x ≤ 1. Returns System.Double.NaN, if x equals System.Double.NaN, or System.Double.Negative infinity, or System.Double.PositiveInfinity
     /// </returns>
     public static double Cos(double angle)
     {
@@ -256,13 +304,13 @@ public static class Maths
                 sum -= Power((double)angle, 2 * i) / (double)Factorial(2 * i);
         }
 
-        if (Abs(sum - 0) < 1E-10)
+        if (Abs(sum - 0) < 10E-10)
             return 0;
 
-        if (Abs(sum - 1) < 1E-10)
+        if (Abs(sum - 1) < 10E-10)
             return 1;
 
-        if (Abs(sum - 1) > -1E-10)
+        if (Abs(sum - 1) < -10E-10)
             return -1;
 
         return sum;
@@ -286,20 +334,57 @@ public static class Maths
     /// A double-precision floating-point number, x.
     /// </returns>
     public static double Cot(double angle)
-        => Sin(angle) / Cos(angle);
+        => Cos(angle) / Sin(angle);
+    #endregion
+
+    #region Logarithmic functions.
 
     /// <summary>
-    /// Returns the arcsine value of the Double-precision floating-point given angle.
+    /// Returns the natural base (e) logarithm, for the given number.
     /// </summary>
-    /// <param name="angle">Double-precision floating-point angle mesured in radians.</param>
-    /// <returns>
-    /// A double-precision floating-point number, x.
-    /// </returns>
-    public static double Asin(double angle)
-        => 1 / Sin(angle);
-          
+    /// <param name="num">The number whose logarithm value want to be found.</param>
+    /// <returns>Returns double-precision floating-point number. Returns System.Double.NaN if num is smaller than or equals 0.</returns>
+    public static double ln(double num)
+    {
+        if (num <= 0)
+            return System.Double.NaN;
+
+        double sum = 0;
+
+        for(int i = 0; i < 100; i++)
+            sum += Power((num - 1) / (num + 1), 2 * i + 1) / (i * 2 + 1);
+
+        sum *= 2;
+
+        return sum;
+    }
 
     #endregion
+
+    #region Hyperbolic functions.
+
+    public static double Sinh(double num)
+    {
+        double sum = num;
+
+        for (int i = 3; i < 100; i += 2)
+            sum += Power(num, i) / Factorial(i);
+
+        return sum;
+    }
+
+    public static double Cosh(double num)
+    {
+        double sum = 1;
+
+        for (int i = 2; i < 100; i += 2)
+            sum += Power(num, i) / Factorial(i);
+
+        return sum;
+    }
+
+    #endregion
+
 }
 
 public static class PreCalculus
