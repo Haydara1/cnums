@@ -16,8 +16,6 @@ class Program
             
         } while (true);
         return;
-        
-        
 
         void ResetConsole()
         {
