@@ -35,7 +35,7 @@ public static class Consts
 
 public static class Maths
 {
-    
+
     #region Absolute value functions.
 
     /// <summary>
@@ -49,7 +49,7 @@ public static class Maths
     {
         if (value < 0)
             value *= -1;
-        
+
         return value;
     }
 
@@ -163,6 +163,30 @@ public static class Maths
     #region Useful functions.
 
     /// <summary>
+    /// Returns the cubic root of the given number.
+    /// </summary>
+    /// <param name="num">The number whose cubic root want to be found.</param>
+    /// <returns>Returns a double-precision floating-point number, representing the cubic root of the given number.
+    /// Returns System.Double.NaN if num equals System.Double.Nan.</returns>
+    public static double Cbrt(double num)
+    {
+        double sum = num;
+        double n = (double)1 / 3;
+
+        double u;
+
+        do
+        {
+            u = sum;
+            sum = (2 * sum) + (num / Power(sum));
+            sum *= (double)n;
+
+        } while (Abs((double)sum - u) > 10E-15);
+
+        return sum;
+    }
+
+    /// <summary>
     /// Returns the factorial value of a double-point floating-value number.
     /// </summary>
     /// <param name="num">Double-point floating-value number.</param>
@@ -180,18 +204,66 @@ public static class Maths
         return f;
     }
 
+    public static int Floor(double num)
+    {
+        string s = num.ToString();
+
+        if (!s.Contains('.')) return (int)num;
+
+        string n = String.Empty;
+
+        foreach(char c in s)
+        {
+            if (c == '.') break;
+            n += c;
+        }
+
+        num = Convert.ToInt32(n);
+
+        if (n[0] == '-')
+        {
+            num--;
+        }
+
+        return (int)num;
+    }
+
+    public static int Ceiling(double num)
+    {   
+        string s = num.ToString();
+
+        if (!s.Contains('.')) return (int)num;
+
+        string n = String.Empty;
+
+        foreach (char c in s)
+        {
+            if (c == '.') break;
+            n += c;
+        }
+
+        num = Convert.ToInt32(n);
+
+        if (n[0] != '-')
+        {
+            num++;
+        }
+
+        return (int)num;
+    }
+
     /// <summary>
     /// Returns the number x raised to power y.
     /// </summary>
     /// <param name="x">Power base.</param>
     /// <param name="y">Power.</param>
     /// <returns>Returns double-point floating-value number.</returns>
-    public static double Power(double x, int y)
+    public static double Power(double x, int y = 2)
     {
         double pow = 1;
         bool NGPow = false;
 
-        if(y < 0)
+        if (y < 0)
         {
             y *= -1;
             NGPow = true;
@@ -217,19 +289,22 @@ public static class Maths
     /// Returns System.Double.NaN if num equals System.Double.Nan or is smaller than zero.</returns>
     public static double Sqrt(double num)
     {
-        if (num == System.Double.NaN || num < 0)
+        if (double.IsNaN(num))
             return System.Double.NaN;
 
         if (num == System.Double.PositiveInfinity)
             return System.Double.PositiveInfinity;
 
         double sum = num;
+        double u;
 
-        for (int i = 0; i < 542; i++)
-        {   
+        do
+        {
+            u = sum;
             sum = (sum + (num / sum));
             sum *= 0.5;
-        }
+
+        } while (Abs((double)sum - u) > 10E-15);
 
         return sum;
     }
@@ -255,21 +330,30 @@ public static class Maths
     /// </returns>
     public static double Sin(double angle)
     {
-        if(angle == System.Double.PositiveInfinity || angle == System.Double.NegativeInfinity || angle == System.Double.NaN)
+        if (angle == System.Double.PositiveInfinity || angle == System.Double.NegativeInfinity || angle == System.Double.NaN)
             return System.Double.NaN;
 
         double sum = 0;
+        double u;
+        int i = 0;
 
-        for(int i = 0; i < 100; i++)
+        do
         {
-            if(i % 2 == 0)
+            u = sum;
+
+            if (i % 2 == 0)
                 sum += Power((double)angle, 2 * i + 1) / (double)Factorial(2 * i + 1);
 
             else
                 sum -= Power((double)angle, 2 * i + 1) / (double)Factorial(2 * i + 1);
-        }
 
-        if(Abs(sum - 0) < 10E-20)
+            i++;
+
+        } while (Abs((double)sum - u) > 10E-100);
+
+        Console.WriteLine(i);
+
+        if (Abs(sum - 0) < 10E-20)
             return 0;
 
         if (Abs(sum - 1) < 10E-10)
@@ -335,6 +419,20 @@ public static class Maths
     /// </returns>
     public static double Cot(double angle)
         => Cos(angle) / Sin(angle);
+
+    /// <summary>
+    /// Returns Sin(x) / x value of the Double-precision floating-point given angle.
+    /// </summary>
+    /// <param name="angle">Double-precision floating-point angle mesured in radians.</param>
+    /// <returns>
+    /// A double-precision floating-point number, x.
+    /// </returns>
+    public static double Sinc(double angle)
+    {
+        if (angle == 0) return 1;
+        return Sin(angle) / angle;
+    }
+
     #endregion
 
     #region Logarithmic functions.
@@ -344,25 +442,30 @@ public static class Maths
     /// </summary>
     /// <param name="num">The number whose logarithm value want to be found.</param>
     /// <returns>Returns double-precision floating-point number. Returns System.Double.NaN if num is smaller than or equals 0.</returns>
-    public static double ln(double num)
+    public static double Ln(double num)
     {
-        if (num <= 0)
-            return System.Double.NaN;
+        if (num <= 0) return System.Double.NaN;
 
-        double sum = 0;
+        return PrivateFunctions.LogTen(num) / PrivateFunctions.LogTen(Consts.E);
+    }
 
-        for(int i = 0; i < 100; i++)
-            sum += Power((num - 1) / (num + 1), 2 * i + 1) / (i * 2 + 1);
 
-        sum *= 2;
+    public static double Log(double num, double logBase)
+    {
+        if (num <= 0 || logBase == 1 || logBase <= 0) return System.Double.NaN;
 
-        return sum;
+        return PrivateFunctions.LogTen(num) / PrivateFunctions.LogTen(logBase);
     }
 
     #endregion
 
     #region Hyperbolic functions.
 
+    /// <summary>
+    /// Returns the sinh of the given number.
+    /// </summary>
+    /// <param name="num">An angle, measured in radians.</param>
+    /// <returns>The sinh of the given number.</returns>
     public static double Sinh(double num)
     {
         double sum = num;
@@ -373,6 +476,11 @@ public static class Maths
         return sum;
     }
 
+    /// <summary>
+    /// Returns the cosh of the given number.
+    /// </summary>
+    /// <param name="num">An angle, measured in radians.</param>
+    /// <returns>The cosh of the given number.</returns>
     public static double Cosh(double num)
     {
         double sum = 1;
@@ -382,6 +490,26 @@ public static class Maths
 
         return sum;
     }
+
+    #endregion
+
+    #region Exponential functions.
+
+    /// <summary>
+    /// Returns the number e raised to power num.
+    /// </summary>
+    /// <param name="num">Double-precision floating point number, representing the power wanted.</param>
+    /// <returns>Returns e raised to specified power. </returns>
+    public static double Exp(double num)
+    {
+        double sum = 1;
+
+        for (int i = 1; i < 100; i++)
+            sum += Power(num, i) / Factorial(i);
+
+        return sum;
+    }
+
 
     #endregion
 
