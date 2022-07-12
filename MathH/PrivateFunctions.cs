@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MathH
+﻿namespace MathH
 {
     internal class PrivateFunctions
     {
         private static double Normalize(double num)
         {
-            char[] numArray = num.ToString().ToCharArray();
+            string number = num.ToString();
+
+            char[] numArray = number.ToCharArray();
             List<char> numList = numArray.ToList(); //Convert number to char list.
 
             if (numList.Contains('.')) numList.Remove('.'); //Remove '.' if found.
@@ -27,8 +23,8 @@ namespace MathH
         {
             string str = num.ToString();
             int len = 0;
-            
-            foreach(char c in str)
+
+            foreach (char c in str)
             {
                 if (c == '.') break;
                 len++;
@@ -68,15 +64,15 @@ namespace MathH
 
         internal static double LogTen(double num, int accuracy = 100)
         {
-            List<int> resultList = new List<int>();
+            List<int> resultList = new();
 
             double[] arr = GreaterThanOne(num);
             num = arr[0];
             double sign = arr[1];
 
-            for(int _ = 0; _ < accuracy; _++)
+            for (int _ = 0; _ < accuracy; _++)
             {
-                int DigitsNum = DigitCounter(num) - 1;
+                int DigitsNum = DigitCounter(num) - 1; //Depending on the eqaution: Number of digits = 1 + log(num)
                 resultList.Add(DigitsNum);
 
                 num = Normalize(num);
@@ -84,7 +80,8 @@ namespace MathH
             }
 
             double result = ListToDouble(resultList);
-            return sign * result;
+            return sign * result; // log(a) = -log(1/a)
         }
+        
     }
 }

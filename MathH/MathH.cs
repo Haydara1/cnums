@@ -212,7 +212,7 @@ public static class Maths
 
         string n = String.Empty;
 
-        foreach(char c in s)
+        foreach (char c in s)
         {
             if (c == '.') break;
             n += c;
@@ -229,7 +229,7 @@ public static class Maths
     }
 
     public static int Ceiling(double num)
-    {   
+    {
         string s = num.ToString();
 
         if (!s.Contains('.')) return (int)num;
@@ -435,6 +435,76 @@ public static class Maths
 
     #endregion
 
+    #region Inverse Trigonometric functions.
+
+    public static double Asin(double num)
+    {
+        if (num < -1 || num > 1) return System.Double.NaN;
+
+        double sum = num;
+
+        for(int i = 1; i < 100; i++)
+        {
+            double helper = Power(num, (i * 2) + 1) / ((i * 2) + 1);
+
+            double multi = 1, div = 1;
+
+            for(int j = 1; j <= i * 2; j++)
+                if (j % 2 == 0) div *= j;
+                else multi *= j;
+
+            helper *= multi;
+            helper /= div;
+
+            sum += helper;
+        }
+
+        return sum;
+    }
+
+    public static double Acos(double num)
+        =>(Consts.PI / 2) - Asin(num);
+
+    public static double Atan(double num)
+    {
+        double sum = 0;
+
+        if(num < 1 && num > -1)
+        {
+            for(int i = 0; i < 100; i++)
+            {
+                if (i % 2 == 0) sum += Power(num, (i * 2 + 1)) / ((i * 2) + 1);
+                else sum -= Power(num, (i * 2 + 1)) / ((i * 2) + 1);
+            }
+
+            return sum;
+        }
+
+        if (num >= 1) sum += Consts.PI / 2;
+        else if (num <= -1) sum -= Consts.PI / 2;
+
+        for(int i = 0; i < 100; i++)
+        {
+            double helper = 1 / (((2 * i) + 1) * Power(num, (i * 2) + 1));
+
+            if (i % 2 == 0) sum -= helper;
+            else sum += helper;
+        }
+
+        return sum;
+    }
+
+    public static double Asec(double num)
+       => Acos(1 / num);
+
+    public static double Acsc(double num)
+        => Asin(1 / num);
+
+    public static double Acot(double num)
+        => (Consts.PI / 2) - Atan(num);
+
+    #endregion
+
     #region Logarithmic functions.
 
     /// <summary>
@@ -449,12 +519,41 @@ public static class Maths
         return PrivateFunctions.LogTen(num) / PrivateFunctions.LogTen(Consts.E);
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="num"></param>
+    /// <param name="logBase"></param>
+    /// <returns></returns>
     public static double Log(double num, double logBase)
     {
         if (num <= 0 || logBase == 1 || logBase <= 0) return System.Double.NaN;
 
-        return PrivateFunctions.LogTen(num) / PrivateFunctions.LogTen(logBase);
+        return PrivateFunctions.LogTen(num) / PrivateFunctions.LogTen(logBase); // Logb(a) = log(a) / log(b)
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="num"></param>
+    /// <returns></returns>
+    public static double Log10(double num)
+    {
+        if (num <= 0) return System.Double.NaN;
+
+        return PrivateFunctions.LogTen(num) / PrivateFunctions.LogTen(10);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="num"></param>
+    /// <returns></returns>
+    public static double Log2(double num)
+    {
+        if (num <= 0) return System.Double.NaN;
+
+        return PrivateFunctions.LogTen(num) / PrivateFunctions.LogTen(2);
     }
 
     #endregion
