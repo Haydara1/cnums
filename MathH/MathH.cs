@@ -1,4 +1,6 @@
-﻿namespace MathH;
+﻿using System.Diagnostics;
+
+namespace cnums;
 
 
 /// <summary>
@@ -158,9 +160,139 @@ public static class Maths
         return value;
     }
 
+    public static double Abs(Complex c)
+        => Sqrt(Power(c.Re) + Power(c.Im));
+
     #endregion
 
-    #region Useful functions.
+    #region Factorial functions
+
+    /// <summary>
+    /// Returns the factorial value of the given number.
+    /// </summary>
+    /// <param name="num">Number whose factorial value want to be found.</param>
+    /// <returns>Returns an double-precision floating-point number.</returns>
+    public static double Factorial(double num)
+    {
+        double f;
+
+        if (num == 0 || num == 1)
+            return 1;
+
+        else
+            f = num * Factorial((double)num - 1);
+
+        return f;
+    }
+
+    /// <summary>
+    /// Returns the factorial value of the given number.
+    /// </summary>
+    /// <param name="num">Number whose factorial value want to be found.</param>
+    /// <returns>Returns an single-precision floating-point number.</returns>
+    public static float Factorial(float num)
+    {
+        float f;
+
+        if (num == 0 || num == 1)
+            return 1;
+
+        else
+            f = num * Factorial((float)num - 1);
+
+        return f;
+    }
+
+    /// <summary>
+    /// Returns the factorial value of the given number.
+    /// </summary>
+    /// <param name="num">Number whose factorial value want to be found.</param>
+    /// <returns>Returns an Int32 number.</returns>
+    public static int Factorial(int num)
+    {
+        int f;
+
+        if (num == 0 || num == 1)
+            return 1;
+
+        else
+            f = num * Factorial((int)num - 1);
+
+        return f;
+    }
+
+    /// <summary>
+    /// Returns the factorial value of the given number.
+    /// </summary>
+    /// <param name="num">Number whose factorial value want to be found.</param>
+    /// <returns>Returns an Int64 number.</returns>
+    public static long Factorial(long num)
+    {
+        long f;
+
+        if (num == 0 || num == 1)
+            return 1;
+
+        else
+            f = num * Factorial((long)num - 1);
+
+        return f;
+    }
+
+    /// <summary>
+    /// Returns the factorial value of the given number.
+    /// </summary>
+    /// <param name="num">Number whose factorial value want to be found.</param>
+    /// <returns>Returns an Int16 number.</returns>
+    public static short Factorial(short num)
+    {
+        short f;
+
+        if (num == 0 || num == 1)
+            return 1;
+
+        else
+            f = (short)(num * Factorial((short)num - 1));
+
+        return f;
+    }
+
+    /// <summary>
+    /// Returns the factorial value of the given number.
+    /// </summary>
+    /// <param name="num">Number whose factorial value want to be found.</param>
+    /// <returns>Returns a decimal number.</returns>
+    public static decimal Factorial(decimal num)
+    {
+        decimal f;
+
+        if (num == 0 || num == 1)
+            return 1;
+
+        else
+            f = (decimal)(num * Factorial((decimal)num - 1));
+
+        return f;
+    }
+
+    public static double Gamma(double num)
+    {
+        double product = Exp(Consts.Gamma * num);
+        product *= num;
+
+        for(int i = 1; i < 1000; i++)
+        {
+            double helper = 1 + (num / i);
+            helper *= Exp(-(num / i));
+            product *= helper;
+        }
+
+        return product;
+    }
+
+    #endregion
+
+    #region Miscellaneous.
 
     /// <summary>
     /// Returns the cubic root of the given number.
@@ -185,25 +317,7 @@ public static class Maths
 
         return sum;
     }
-
-    /// <summary>
-    /// Returns the factorial value of a double-point floating-value number.
-    /// </summary>
-    /// <param name="num">Double-point floating-value number.</param>
-    /// <returns>Returns a double-point floating-value number.</returns>
-    public static double Factorial(double num)
-    {
-        double f;
-
-        if (num == 0 || num == 1)
-            return 1;
-
-        else
-            f = num * Factorial(num - 1);
-
-        return f;
-    }
-
+    
     public static int Floor(double num)
     {
         string s = num.ToString();
@@ -253,35 +367,6 @@ public static class Maths
     }
 
     /// <summary>
-    /// Returns the number x raised to power y.
-    /// </summary>
-    /// <param name="x">Power base.</param>
-    /// <param name="y">Power.</param>
-    /// <returns>Returns double-point floating-value number.</returns>
-    public static double Power(double x, int y = 2)
-    {
-        double pow = 1;
-        bool NGPow = false;
-
-        if (y < 0)
-        {
-            y *= -1;
-            NGPow = true;
-        }
-
-        while (y > 0)
-        {
-            pow *= x;
-            --y;
-        }
-
-        if (NGPow)
-            return 1 / pow;
-
-        return pow;
-    }
-
-    /// <summary>
     /// Returns the square root of the given number.
     /// </summary>
     /// <param name="num">The number whose square root want to be found.</param>
@@ -317,6 +402,30 @@ public static class Maths
     public static double ToRadian(this double num)
         => Consts.PI * num / 180;
 
+    public static int GCD(int a, int b)
+    {
+        if (a == 0 || b == 0) return Statistics.Max(a, b);
+
+        int g;
+
+        if (a > b)
+        {
+            int r = a % b;
+            g = GCD(b, r);
+        }
+
+        else
+        {
+            int r = b % a;
+            g = GCD(a, r);
+        }
+
+        return g;
+    }
+
+    public static int LCM(int a, int b)
+        => (a * b) / GCD(a, b);
+
     #endregion
 
     #region Trigonometric functions.
@@ -342,16 +451,14 @@ public static class Maths
             u = sum;
 
             if (i % 2 == 0)
-                sum += Power((double)angle, 2 * i + 1) / (double)Factorial(2 * i + 1);
+                sum += Power((double)angle, 2 * i + 1) / (double)Factorial((double)2 * i + 1);
 
             else
-                sum -= Power((double)angle, 2 * i + 1) / (double)Factorial(2 * i + 1);
+                sum -= Power((double)angle, 2 * i + 1) / (double)Factorial((double)2 * i + 1);
 
             i++;
 
         } while (Abs((double)sum - u) > 10E-100);
-
-        Console.WriteLine(i);
 
         if (Abs(sum - 0) < 10E-20)
             return 0;
@@ -382,10 +489,10 @@ public static class Maths
         for (int i = 0; i < 100; i++)
         {
             if (i % 2 == 0)
-                sum += Power((double)angle, 2 * i) / (double)Factorial(2 * i);
+                sum += Power((double)angle, 2 * i) / (double)Factorial((double)2 * i);
 
             else
-                sum -= Power((double)angle, 2 * i) / (double)Factorial(2 * i);
+                sum -= Power((double)angle, 2 * i) / (double)Factorial((double)2 * i);
         }
 
         if (Abs(sum - 0) < 10E-10)
@@ -566,14 +673,7 @@ public static class Maths
     /// <param name="num">An angle, measured in radians.</param>
     /// <returns>The sinh of the given number.</returns>
     public static double Sinh(double num)
-    {
-        double sum = num;
-
-        for (int i = 3; i < 100; i += 2)
-            sum += Power(num, i) / Factorial(i);
-
-        return sum;
-    }
+        => (Exp(num) - Exp(-num)) / 2;
 
     /// <summary>
     /// Returns the cosh of the given number.
@@ -581,15 +681,89 @@ public static class Maths
     /// <param name="num">An angle, measured in radians.</param>
     /// <returns>The cosh of the given number.</returns>
     public static double Cosh(double num)
-    {
-        double sum = 1;
+        => (Exp(num) + Exp(-num)) / 2;
 
-        for (int i = 2; i < 100; i += 2)
-            sum += Power(num, i) / Factorial(i);
+    public static double Tanh(double num)
+        => Sinh(num) / Cosh(num);
+
+    public static double Coth(double num)
+        => Cosh(num) / Sinh(num);
+
+    public static double Sech(double num)
+        => 1 / Cosh(num);
+
+    public static double Csch(double num)
+        => 1 / Sinh(num);
+
+    #endregion
+
+    #region Inverse hyperbolic functions
+
+    public static double Asinh(double num)
+    {
+        double sum;
+
+        if(num > -1 && num < 1)
+        {
+            sum = num;
+
+            for (int i = 1; i < 151; i++)
+            {
+                double helper = Power(num, (i * 2) + 1) / ((i * 2) + 1);
+
+                double multi = 1, div = 1;
+
+                for (int j = 1; j <= i * 2; j++)
+                    if (j % 2 == 0) div *= j;
+                    else multi *= j;
+
+                helper *= multi;
+                helper /= div;
+
+                if (i % 2 == 0) sum += helper;
+                else sum -= helper;
+            }
+
+            return sum;
+        }
+
+        sum = Ln(2 * num);
+
+        for(int i = 1; i < 100; i++) //Precision error when num < 1
+        {
+            int k = i * 2;
+
+            double helper;
+            double multi = 1, div = 1;
+
+            div *= k * Power(num, k);
+
+            for (int j = 1; j <= k; j++)
+                if (j % 2 == 0) div *= j;
+                else multi *= j;
+
+            helper = multi / div;
+
+            if (i % 2 == 0) sum -= helper;
+            else sum += helper;
+        }
+
+        if (num <= -1) sum *= -1;
 
         return sum;
     }
 
+    public static double Atanh(double num)
+    {
+        if (num >= 1 || num <= -1) return System.Double.NaN;
+
+        double sum = 0;
+
+        for (int i = 0; i < 100; i++)
+            sum += Power(num, (i * 2) + 1) / ((i * 2) + 1);
+
+        return sum;
+    }
     #endregion
 
     #region Exponential functions.
@@ -604,25 +778,268 @@ public static class Maths
         double sum = 1;
 
         for (int i = 1; i < 100; i++)
-            sum += Power(num, i) / Factorial(i);
+            sum += Power(num, i) / Factorial((double)i);
 
         return sum;
     }
 
+    /// <summary>
+    /// Returns the number x raised to power y.
+    /// </summary>
+    /// <param name="x">Power base.</param>
+    /// <param name="y">Power.</param>
+    /// <returns>Returns double-point floating-value number.</returns>
+    public static double Power(double x, int y = 2)
+    {
+        double pow = 1;
+        bool NGPow = false;
+
+        if (y < 0)
+        {
+            y *= -1;
+            NGPow = true;
+        }
+
+        while (y > 0)
+        {
+            pow *= x;
+            --y;
+        }
+
+        if (NGPow)
+            return 1 / pow;
+
+        return pow;
+    }
+
+    /// <summary>
+    /// Returns the number x raised to power y.
+    /// </summary>
+    /// <param name="x">Power base.</param>
+    /// <param name="y">Decimal (non-integer) power.</param>
+    /// <returns>Returns double-point floating-value number.</returns>
+    public static double Power(double x, double y)
+        => Exp(y * Ln(x));
 
     #endregion
 
 }
 
-public static class PreCalculus
+public static class Probabilites 
 {
+    #region nPr
 
+#pragma warning disable IDE1006 // Naming Styles
+    public static double nPr(double n, double r)
+#pragma warning restore IDE1006 // Naming Styles
+        => Maths.Factorial(n) / Maths.Factorial(n - r);
+
+#pragma warning disable IDE1006 // Naming Styles
+    public static float nPr(float n, float r)
+        => Maths.Factorial((float)n) / Maths.Factorial((float)n - r);
+
+    public static int nPr(int n, int r)
+        => Maths.Factorial((int)n) / Maths.Factorial((int)n - r);
+
+    public static long nPr(long n, long r)
+        => Maths.Factorial((long)n) / Maths.Factorial((long)n - r);
+
+    public static decimal nPr(decimal n, decimal r)
+        => Maths.Factorial((decimal)n) / Maths.Factorial((decimal)n - r);
+
+    public static short nPr(short n, short r)
+        => (short)(Maths.Factorial((short)n) / Maths.Factorial((short)n - r));
+
+
+    #endregion
+
+    #region nCr
+
+    public static double nCr(double n, double r)
+        => Maths.Factorial((double)n) / (Maths.Factorial((double)n - r) * Maths.Factorial((double)r));
+
+    public static float nCr(float n, float r)
+        => (float)(Maths.Factorial((float)n) / (Maths.Factorial((float)n - r) * Maths.Factorial((float)r)));
+
+    public static int nCr(int n, int r)
+        => (int)Maths.Factorial((int)n) / (int)(Maths.Factorial((int)n - r) * Maths.Factorial((int)r));
+
+    public static long nCr(long n, long r)
+        => (long)Maths.Factorial((long)n) / (long)(Maths.Factorial((long)n - r) * Maths.Factorial((long)r));
+
+    public static short nCr(short n, short r)
+        => (short)((short)Maths.Factorial((short)n) / (short)(Maths.Factorial((short)n - r) * Maths.Factorial((short)r)));
+
+    public static decimal nCr(decimal n, decimal r)
+        => (decimal)Maths.Factorial((decimal)n) / (decimal)(Maths.Factorial((decimal)(n - r)) * Maths.Factorial((decimal)r));
+
+#pragma warning restore IDE1006 // Naming Styles
+    #endregion
 }
 
+public static class Statistics
+{
+    #region Max and min functions.
+
+    public static int Max(int a, int b)
+    {
+        if (a >= b) return a;
+        return b;
+    }
+
+    public static double Max(double a, double b)
+    {
+        if (a >= b) return a;
+        return b;
+    }
+
+    public static float Max(float a, float b)
+    {
+        if (a >= b) return a;
+        return b;
+    }
+
+    public static long Max(long a, long b)
+    {
+        if (a >= b) return a;
+        return b;
+    }
+
+    public static short Max(short a, short b)
+    {
+        if (a >= b) return a;
+        return b;
+    }
+
+    public static decimal Max(decimal a, decimal b)
+    {
+        if (a >= b) return a;
+        return b;
+    }
+
+    public static int Min(int a, int b)
+    {
+        if (a <= b) return a;
+        return b;
+    }
+
+    public static double Min(double a, double b)
+    {
+        if (a <= b) return a;
+        return b;
+    }
+
+    public static float Min(float a, float b)
+    {
+        if (a <= b) return a;
+        return b;
+    }
+
+    public static long Min(long a, long b)
+    {
+        if (a <= b) return a;
+        return b;
+    }
+
+    public static short Min(short a, short b)
+    {
+        if (a <= b) return a;
+        return b;
+    }
+
+    public static decimal Min(decimal a, decimal b)
+    {
+        if (a <= b) return a;
+        return b;
+    }
+
+    #endregion
+
+    #region Mean functions
+
+    public static double Mean(double[] array)
+    {
+        double sum = 0;
+
+        foreach (double d in array) sum += d;
+
+        return sum / array.Length;
+    }
+
+    public static float Mean(float[] array)
+    {
+        float sum = 0;
+
+        foreach (float f in array) sum += f;
+
+        return sum / array.Length;
+    }
+
+    public static int Mean(int[] array)
+    {
+        int sum = 0;
+
+        foreach (int i in array) sum += i;
+
+        return sum / array.Length;
+    }
+
+    public static long Mean(long[] array)
+    {
+        long sum = 0;
+
+        foreach (long l in array) sum += l;
+
+        return sum / array.Length;
+    }
+
+    public static short Mean(short[] array)
+    {
+        short sum = 0;
+
+        foreach (short s in array) sum += s;
+
+        return (short)(sum / array.Length);
+    }
+
+    public static decimal Mean(decimal[] array)
+    {
+        decimal sum = 0;
+
+        foreach (decimal d in array) sum += d;
+
+        return sum / array.Length;
+    }
+
+    public static uint Mean(uint[] array)
+    {
+        uint sum = 0;
+
+        foreach (uint u in array) sum += u;
+
+        return (uint)(sum / array.Length);
+    }
+
+    #endregion
+
+    #region Median functions.
+
+    public static double Median(double[] array)
+    {
+        Array.Sort(array);
+
+        int index;
+
+        if (array.Length % 2 != 0) index = (array.Length + 1) / 2;
+        else index = array.Length / 2;
+
+        return array[index];
+    }
+
+    #endregion
+}
 
 public static class Calculus
 {
 
 }
-
-

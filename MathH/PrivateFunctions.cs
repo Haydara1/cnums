@@ -1,4 +1,4 @@
-﻿namespace MathH
+﻿namespace cnums
 {
     internal class PrivateFunctions
     {
