@@ -81,11 +81,6 @@ namespace cnums
             return (this.Im == complex.Im && this.Re == complex.Re);
         }
 
-        public override int GetHashCode()
-        {
-            throw new NotImplementedException();
-        }
-
         public bool isConjugate(Complex c1)
             => (this.Re == c1.Re && this.Im == -c1.Im);
 
