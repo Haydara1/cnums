@@ -33,6 +33,11 @@ public static class Consts
     ///     Represents the golden ratio, specified by the constant φ.
     /// </summary>
     public const double Phi = 1.61803398874989484820;
+
+    ///<summary>
+    ///     Represents the square root of -1, specified by the constant i.
+    /// </summary>
+    public static readonly Complex j = new(0, 1);
 }
 
 public static class Maths
@@ -277,17 +282,31 @@ public static class Maths
 
     public static double Gamma(double num)
     {
+        if(num % 0.5 == 0)
+        {
+            double p = Sqrt(Consts.PI);
+            
+            while(num != 0.5)
+            {
+                p *= num;
+                num -= 1;
+            }
+
+            return p;
+        }
+
+
         double product = Exp(Consts.Gamma * num);
         product *= num;
 
-        for(int i = 1; i < 1000; i++)
+        for(int i = 1; i < 100; i++)
         {
             double helper = 1 + (num / i);
             helper *= Exp(-(num / i));
             product *= helper;
         }
 
-        return product;
+        return 1 / product;
     }
 
     #endregion
@@ -549,14 +568,17 @@ public static class Maths
         if (num < -1 || num > 1) return System.Double.NaN;
 
         double sum = num;
+        double u;
+        int i = 1;
 
-        for(int i = 1; i < 100; i++)
+        do
         {
+            u = sum;
             double helper = Power(num, (i * 2) + 1) / ((i * 2) + 1);
 
             double multi = 1, div = 1;
 
-            for(int j = 1; j <= i * 2; j++)
+            for (int j = 1; j <= i * 2; j++)
                 if (j % 2 == 0) div *= j;
                 else multi *= j;
 
@@ -564,7 +586,8 @@ public static class Maths
             helper /= div;
 
             sum += helper;
-        }
+
+        } while (Abs((double)sum - u) > 10E-2);
 
         return sum;
     }
@@ -578,10 +601,10 @@ public static class Maths
 
         if(num < 1 && num > -1)
         {
-            for(int i = 0; i < 100; i++)
+            for(int c = 0; c < 100; c++)
             {
-                if (i % 2 == 0) sum += Power(num, (i * 2 + 1)) / ((i * 2) + 1);
-                else sum -= Power(num, (i * 2 + 1)) / ((i * 2) + 1);
+                if (c % 2 == 0) sum += Power(num, (c * 2 + 1)) / ((c * 2) + 1);
+                else sum -= Power(num, (c * 2 + 1)) / ((c * 2) + 1);
             }
 
             return sum;
@@ -590,13 +613,22 @@ public static class Maths
         if (num >= 1) sum += Consts.PI / 2;
         else if (num <= -1) sum -= Consts.PI / 2;
 
-        for(int i = 0; i < 100; i++)
+        
+        double u;
+        int i = 0;
+
+        do
         {
+            u = sum;
+
             double helper = 1 / (((2 * i) + 1) * Power(num, (i * 2) + 1));
 
             if (i % 2 == 0) sum -= helper;
             else sum += helper;
-        }
+
+            i++;
+
+        } while (Abs((double)sum - u) > 10E-5);
 
         return sum;
     }
