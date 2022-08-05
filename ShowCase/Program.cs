@@ -20,11 +20,13 @@ class Program
         //    Console.WriteLine(d);
         //}
 
-        Complex c1 = new(1, 1);
-        Complex c2 = new(1, 2);
-
-        Console.WriteLine(c1.Equals(c2));
-
+        while(true)
+        {
+            int r = Convert.ToInt32(Console.ReadLine());
+            int[] f = PrimeFactors(r, true);
+            foreach (int i in f) Console.Write(i + " ");
+            Console.WriteLine();
+        }
     }
 
 }
