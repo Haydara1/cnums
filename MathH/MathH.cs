@@ -2,7 +2,6 @@
 
 namespace cnums;
 
-
 /// <summary>
 ///     Provides a list of most used mathematics constants.
 /// </summary>
@@ -165,6 +164,13 @@ public static class Maths
         return value;
     }
 
+    /// <summary>
+    ///     Returns the absolute value of a complex number.
+    /// </summary>
+    /// <param name="value">A cnums.Complex number.</param>
+    /// <returns>
+    ///     A cnums.Complex number, the modulus of the given number.
+    /// </returns>
     public static double Abs(Complex c)
         => Sqrt(Power(c.Re) + Power(c.Im));
 
@@ -414,6 +420,22 @@ public static class Maths
     }
 
     /// <summary>
+    /// Returns the square root of the given complex number.
+    /// </summary>
+    /// <param name="num">The number whose square root want to be found.</param>
+    /// <returns>Returns a cnums.Complex number, representing the square root of the given number.</returns>
+    public static Complex Sqrt(Complex complex)
+    {
+        double real, immaginary;
+
+        real = Sqrt((complex.Modulus() + complex.Re) / 2);
+        immaginary = complex.Im / Abs(complex.Im);
+        immaginary *= Sqrt((complex.Modulus() - complex.Re) / 2);
+
+        return new(real, immaginary);
+    }
+
+    /// <summary>
     /// Converts given number in degrees to radians.
     /// </summary>
     /// <param name="num">Double-precision floating-point number mesured in degrees.</param>
@@ -421,6 +443,12 @@ public static class Maths
     public static double ToRadian(this double num)
         => Consts.PI * num / 180;
 
+    /// <summary>
+    /// Return the greatest common divisor of the given numbers.
+    /// </summary>
+    /// <param name="a">The first number.</param>
+    /// <param name="b">The second number.</param>
+    /// <returns>Returns Int32, the greatest common divisior of the given numbers.</returns>
     public static int GCD(int a, int b)
     {
         if (a == 0 || b == 0) return Statistics.Max(a, b);
@@ -444,6 +472,43 @@ public static class Maths
 
     public static int LCM(int a, int b)
         => (a * b) / GCD(a, b);
+
+    public static int[] PrimeFactors(int num, bool DistinctFactors = false)
+    {
+        int divisor = 2;
+        List<int> list = new();
+
+
+        while(true)
+        {
+            if(num % divisor == 0)
+            {
+                list.Add(divisor);
+                num /= divisor;
+
+                if (num == 1) break;
+
+                continue;
+            }
+
+            divisor++;
+
+            
+            for(int i = 0; i < list.Count; i++)
+            {
+                if(divisor % list[i] == 0)
+                {
+                    divisor++;
+                    i = 0;
+                    continue;
+                }
+            }
+        }
+
+        if (DistinctFactors) return list.Distinct().ToArray();
+
+        return list.ToArray();
+    }
 
     #endregion
 
@@ -1075,3 +1140,5 @@ public static class Calculus
 {
 
 }
+
+//How are you Julia?
