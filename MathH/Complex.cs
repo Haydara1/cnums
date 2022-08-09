@@ -1,5 +1,5 @@
-﻿using static cnums.Maths;
-using static cnums.Consts;
+﻿using static cnums.Consts;
+using static cnums.Maths;
 
 namespace cnums
 {
@@ -7,10 +7,10 @@ namespace cnums
     {
         private double Real;
 
-        public double Re 
+        public double Re
         {
             get { return Real; }
-            set { Real = value; } 
+            set { Real = value; }
         }
 
         private double Immaginary;
@@ -29,7 +29,7 @@ namespace cnums
 
         public Complex(double R = 0, double Theta = 0, bool fromPolarForm = true)
         {
-            if(!fromPolarForm)
+            if (!fromPolarForm)
             {
                 Real = Re;
                 Immaginary = Im;
@@ -63,8 +63,19 @@ namespace cnums
         {
             string s = Real.ToString();
 
+            if (Real == 0 && Immaginary == 0) return "0";
+
+            else if (Real == 0)
+            {
+                if (Immaginary == 1) return "i";
+                else if (Immaginary == -1) return "-i";
+                else return $"{Immaginary}i";
+            }
+
+            else if (Immaginary == 0) return $"{Real}";
+
             if (Immaginary > 0) s += $"+{Immaginary}i";
-            else if( Immaginary == 0) { }
+            else if (Immaginary == 0) { }
             else s += $"{Immaginary}i";
 
             return s;
@@ -89,7 +100,7 @@ namespace cnums
         public bool isConjugate(Complex c1)
             => (this.Re == c1.Re && this.Im == -c1.Im);
 
-        #region Plus operator.
+        #region Addition.
         public static Complex operator +(Complex c1)
             => c1;
         public static Complex operator +(Complex c1, Complex c2)
@@ -107,7 +118,7 @@ namespace cnums
         #endregion
 
 
-        #region Minus operator.
+        #region Substraction.
         public static Complex operator -(Complex c1)
             => new(-c1.Re, -c1.Im);
         public static Complex operator -(Complex c1, Complex c2)
@@ -131,9 +142,31 @@ namespace cnums
         #endregion
 
 
+        #region Multiplication.
+
         public static Complex operator *(Complex c1, Complex c2)
             => new(c1.Re * c2.Re - c1.Im * c2.Im, c2.Im * c1.Re + c1.Im * c2.Re);
+        public static Complex operator *(Complex c1, int n)
+            => new(c1.Re * n, c1.Im * n);
+        public static Complex operator *(Complex c1, short n)
+            => new(c1.Re * n, c1.Im * n);
+        public static Complex operator *(Complex c1, long n)
+            => new(c1.Re * n, c1.Im * n);
+        public static Complex operator *(Complex c1, double n)
+            => new(c1.Re * n, c1.Im * n);
+        public static Complex operator *(Complex c1, float n)
+            => new(c1.Re * n, c1.Im * n);
+        public static Complex operator *(Complex c1, uint n)
+            => new(c1.Re * n, c1.Im * n);
+        public static Complex operator *(Complex c1, ulong n)
+            => new(c1.Re * n, c1.Im * n);
+        public static Complex operator *(Complex c1, ushort n)
+            => new(c1.Re * n, c1.Im * n);
 
+        #endregion
+
+
+        #region Division.
         public static Complex operator /(Complex c1, Complex c2)
         {
             c1 *= c2.Conjugate();
@@ -141,5 +174,45 @@ namespace cnums
             c1.Im /= c2.Modulus();
             return c1;
         }
+
+        public static Complex operator /(Complex c1, int n)
+            => new(c1.Re / n, c1.Im / n);
+        public static Complex operator /(Complex c1, uint n)
+            => new(c1.Re / n, c1.Im / n);
+        public static Complex operator /(Complex c1, long n)
+            => new(c1.Re / n, c1.Im / n);
+        public static Complex operator /(Complex c1, ulong n)
+            => new(c1.Re / n, c1.Im / n);
+        public static Complex operator /(Complex c1, short n)
+            => new(c1.Re / n, c1.Im / n);
+        public static Complex operator /(Complex c1, ushort n)
+            => new(c1.Re / n, c1.Im / n);
+        public static Complex operator /(Complex c1, float n)
+            => new(c1.Re / n, c1.Im / n);
+        public static Complex operator /(Complex c1, double n)
+            => new(c1.Re / n, c1.Im / n);
+
+        #endregion
+
+
+
+        public static bool operator ==(Complex c1, Complex c2)
+            => c1.Equals(c2);
+
+        public static bool operator !=(Complex c1, Complex c2)
+            => c1.Equals(c2);
+
+        public static bool operator >(Complex c1, Complex c2)
+            => c1.Modulus() > c2.Modulus();
+
+        public static bool operator <(Complex c1, Complex c2)
+            => c1.Modulus() < c2.Modulus();
+
+        public static bool operator >=(Complex c1, Complex c2)
+            => c1.Modulus() >= c2.Modulus();
+
+        public static bool operator <=(Complex c1, Complex c2)
+            => c1.Modulus() <= c2.Modulus();
     }
 }
+
