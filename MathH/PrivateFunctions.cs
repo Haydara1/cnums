@@ -82,6 +82,9 @@
             double result = ListToDouble(resultList);
             return sign * result; // log(a) = -log(1/a)
         }
-        
+
+        internal static double ModPi(double angle)
+            => angle % Consts.Tau;
+
     }
 }
