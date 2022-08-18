@@ -200,19 +200,22 @@ namespace cnums
             => c1.Equals(c2);
 
         public static bool operator !=(Complex c1, Complex c2)
-            => c1.Equals(c2);
+            => !c1.Equals(c2);
 
-        public static bool operator >(Complex c1, Complex c2)
-            => c1.Modulus() > c2.Modulus();
 
-        public static bool operator <(Complex c1, Complex c2)
-            => c1.Modulus() < c2.Modulus();
+        //Complex number comparision is still undefined.
 
-        public static bool operator >=(Complex c1, Complex c2)
-            => c1.Modulus() >= c2.Modulus();
+        //public static bool operator >(Complex c1, Complex c2)
+        //    => c1.Modulus() > c2.Modulus();
 
-        public static bool operator <=(Complex c1, Complex c2)
-            => c1.Modulus() <= c2.Modulus();
+        //public static bool operator <(Complex c1, Complex c2)
+        //    => c1.Modulus() < c2.Modulus();
+
+        //public static bool operator >=(Complex c1, Complex c2)
+        //    => c1.Modulus() >= c2.Modulus();
+
+        //public static bool operator <=(Complex c1, Complex c2)
+        //    => c1.Modulus() <= c2.Modulus();
     }
 }
 
