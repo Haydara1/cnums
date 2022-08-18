@@ -86,5 +86,7 @@
         internal static double ModPi(double angle)
             => angle % Consts.Tau;
 
+        internal static bool IsInteger(double number)
+            => number % 1 == 0;
     }
 }
