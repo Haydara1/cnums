@@ -115,7 +115,9 @@ public static partial class Maths
     /// </returns>
     public static double Sinc(double angle)
     {
-        if (angle == 0) return 1;
+        angle = PrivateFunctions.ModPi(angle);
+
+        if (angle == 0) throw new Exception("Undefined");
         return Sin(angle) / angle;
     }
 
