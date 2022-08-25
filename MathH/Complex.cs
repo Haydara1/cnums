@@ -3,9 +3,9 @@ using static cnums.Maths;
 
 namespace cnums
 {
-    public class Complex
+    public class Complex //a + ib
     {
-        private double Real;
+        private double Real; //Real part of the complex number. (a)
 
         public double Re
         {
@@ -13,7 +13,7 @@ namespace cnums
             set { Real = value; }
         }
 
-        private double Immaginary;
+        private double Immaginary; //Immaginary part of the complex number. (b)
 
         public double Im
         {
@@ -21,39 +21,37 @@ namespace cnums
             set { Immaginary = value; }
         }
 
-        public Complex(double Re = 0, double Im = 0)
+        public Complex(double Re = 0, double Im = 0) //Constructor
         {
             Real = Re;
             Immaginary = Im;
         }
 
-        public Complex(double R = 0, double Theta = 0, bool fromPolarForm = true)
+        public Complex(double R = 0, double Theta = 0, bool fromPolarForm = true) //Constuctor, given parameters in polar form.
         {
             if (!fromPolarForm)
             {
                 Real = Re;
                 Immaginary = Im;
             }
-            Real = R * Cos(Theta);
-            Immaginary = R * Sin(Theta);
+            Real = R * Cos(Theta); // a = r * cos(theta)
+            Immaginary = R * Sin(Theta); //b = r * sin(theta)
         }
 
-        public double Modulus()
-            => Abs(new Complex(Real, Immaginary));
+        public double Modulus() // The same as taking the absolute value of a complex number
+            => Abs(new Complex(Real, Immaginary)); 
 
         public double Arg()
         {
-            double magnitude = Abs(new Complex(Real, Immaginary));
+            // Getting magnitude
+            double magnitude = Abs(new Complex(Real, Immaginary)); 
 
-            double snTheta = Asin(Immaginary / magnitude);
-            double csTheta = Acos(Real / magnitude);
+            double theta = Asin(Abs(Immaginary) / magnitude); // Sin(theta) = b / r
 
-            double theta = (Abs(snTheta + csTheta)) / 2;
-
-            if (snTheta >= 0 && csTheta >= 0) return theta;
-            else if (snTheta >= 0 && csTheta <= 0) return PI - theta;
-            else if (snTheta <= 0 && csTheta <= 0) return PI + theta;
-            else return -theta;
+            if (Immaginary >= 0 && Real >= 0) return theta; // First quadrant
+            else if (Immaginary >= 0 && Real <= 0) return PI - theta; // Second quadrant
+            else if (Immaginary <= 0 && Real <= 0) return PI + theta; // Third quadrant
+            else return -theta; // Fourth quadrant
         }
 
         public Complex Conjugate()
@@ -103,98 +101,125 @@ namespace cnums
         #region Addition.
         public static Complex operator +(Complex c1)
             => c1;
+
         public static Complex operator +(Complex c1, Complex c2)
             => new(c1.Re + c2.Re, c1.Im + c2.Im);
+
         public static Complex operator +(Complex c1, int n)
             => new(c1.Re + n, c1.Im);
+
         public static Complex operator +(Complex c1, long n)
             => new(c1.Re + n, c1.Im);
+
         public static Complex operator +(Complex c1, double n)
             => new(c1.Re + n, c1.Im);
+
         public static Complex operator +(Complex c1, short n)
             => new(c1.Re + n, c1.Im);
+
         public static Complex operator +(Complex c1, float n)
             => new(c1.Re + n, c1.Im);
         #endregion
 
-
         #region Substraction.
         public static Complex operator -(Complex c1)
             => new(-c1.Re, -c1.Im);
+
         public static Complex operator -(Complex c1, Complex c2)
             => new(c1.Re - c2.Re, c1.Im - c2.Im);
-        public static Complex operator -(Complex c1, int n)
-            => new(c1.Re - n, c1.Im - n);
-        public static Complex operator -(Complex c1, short n)
-            => new(c1.Re - n, c1.Im - n);
-        public static Complex operator -(Complex c1, long n)
-            => new(c1.Re - n, c1.Im - n);
-        public static Complex operator -(Complex c1, double n)
-            => new(c1.Re - n, c1.Im - n);
-        public static Complex operator -(Complex c1, float n)
-            => new(c1.Re - n, c1.Im - n);
-        public static Complex operator -(Complex c1, uint n)
-            => new(c1.Re - n, c1.Im - n);
-        public static Complex operator -(Complex c1, ushort n)
-            => new(c1.Re - n, c1.Im - n);
-        public static Complex operator -(Complex c1, ulong n)
-            => new(c1.Re - n, c1.Im - n);
-        #endregion
 
+        public static Complex operator -(Complex c1, int n)
+            => new(c1.Re - n, c1.Im);
+
+        public static Complex operator -(Complex c1, short n)
+            => new(c1.Re - n, c1.Im);
+
+        public static Complex operator -(Complex c1, long n)
+            => new(c1.Re - n, c1.Im);
+
+        public static Complex operator -(Complex c1, double n)
+            => new(c1.Re - n, c1.Im);
+
+        public static Complex operator -(Complex c1, float n)
+            => new(c1.Re - n, c1.Im);
+
+        public static Complex operator -(Complex c1, uint n)
+            => new(c1.Re - n, c1.Im);
+
+        public static Complex operator -(Complex c1, ushort n)
+            => new(c1.Re - n, c1.Im);
+
+        public static Complex operator -(Complex c1, ulong n)
+            => new(c1.Re - n, c1.Im);
+        #endregion
 
         #region Multiplication.
 
         public static Complex operator *(Complex c1, Complex c2)
             => new(c1.Re * c2.Re - c1.Im * c2.Im, c2.Im * c1.Re + c1.Im * c2.Re);
+
         public static Complex operator *(Complex c1, int n)
             => new(c1.Re * n, c1.Im * n);
+
         public static Complex operator *(Complex c1, short n)
             => new(c1.Re * n, c1.Im * n);
+
         public static Complex operator *(Complex c1, long n)
             => new(c1.Re * n, c1.Im * n);
+
         public static Complex operator *(Complex c1, double n)
             => new(c1.Re * n, c1.Im * n);
+
         public static Complex operator *(Complex c1, float n)
             => new(c1.Re * n, c1.Im * n);
+
         public static Complex operator *(Complex c1, uint n)
             => new(c1.Re * n, c1.Im * n);
+
         public static Complex operator *(Complex c1, ulong n)
             => new(c1.Re * n, c1.Im * n);
+
         public static Complex operator *(Complex c1, ushort n)
             => new(c1.Re * n, c1.Im * n);
-
         #endregion
-
 
         #region Division.
         public static Complex operator /(Complex c1, Complex c2)
         {
             c1 *= c2.Conjugate();
-            c1.Re /= c2.Modulus();
-            c1.Im /= c2.Modulus();
+            c1.Re /= Power(c2.Modulus(), 2);
+            c1.Im /= Power(c2.Modulus(), 2);
             return c1;
         }
 
         public static Complex operator /(Complex c1, int n)
             => new(c1.Re / n, c1.Im / n);
+
         public static Complex operator /(Complex c1, uint n)
             => new(c1.Re / n, c1.Im / n);
+
         public static Complex operator /(Complex c1, long n)
             => new(c1.Re / n, c1.Im / n);
+
         public static Complex operator /(Complex c1, ulong n)
             => new(c1.Re / n, c1.Im / n);
+
         public static Complex operator /(Complex c1, short n)
             => new(c1.Re / n, c1.Im / n);
+
         public static Complex operator /(Complex c1, ushort n)
             => new(c1.Re / n, c1.Im / n);
+
         public static Complex operator /(Complex c1, float n)
             => new(c1.Re / n, c1.Im / n);
+
         public static Complex operator /(Complex c1, double n)
             => new(c1.Re / n, c1.Im / n);
 
+        public static Complex operator /(double n, Complex c)
+            => (c.Conjugate() * n) / (Power(c.Modulus(), 2));
+
         #endregion
-
-
 
         public static bool operator ==(Complex c1, Complex c2)
             => c1.Equals(c2);
