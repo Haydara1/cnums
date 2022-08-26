@@ -53,6 +53,9 @@ public static partial class Maths
         return PrivateFunctions.LogTen(num) / PrivateFunctions.LogTen(2);
     }
 
+    public static Complex Ln(Complex num)
+        => new(Ln(num.Modulus()), num.Arg());
+
     #endregion
 
     #region Exponential functions.
@@ -64,12 +67,53 @@ public static partial class Maths
     /// <returns>Returns e raised to specified power. </returns>
     public static double Exp(double num)
     {
-        double sum = 1;
+        int x = Floor(num);
 
-        for (int i = 1; i < 100; i++)
-            sum += Power(num, i) / Factorial((double)i);
+        //Determine the wights.
+        double PowerOfTwo = 0.5;
+        double z = num - x;
+        double[] w = new double[100];
 
-        return sum;
+        for (int i = 0; i < 100; i++)
+        {
+            if (PowerOfTwo < z)
+            {
+                w[i] = 1;
+                z -= PowerOfTwo;
+            }
+
+            PowerOfTwo /= 2;
+        }
+
+        //Calculate products.
+        double fx = 1;
+        double ai = 0;
+
+        for (int i = 0; i < 100; i++)
+        {
+            if (i < Consts.ExpValues.Length)
+                ai = Consts.ExpValues[i];
+            else ai = 1 + (ai - 1) / 2;
+
+            if (0 < w[i]) fx *= ai;
+        }
+
+        //Perform residual multiplication.
+        fx = fx
+            * (1 + z
+            * (1 + z / 2
+            * (1 + z / 3
+            * (1 + z / 4))));
+
+        //Account for factor exp(X_INT).
+        if (x < 0)
+            for (int i = 0; i < -x; i++)
+                fx /= Consts.E;
+        else
+            for (int i = 0; i < x; i++)
+                fx *= Consts.E;
+
+        return fx;
     }
 
     /// <summary>
@@ -113,3 +157,4 @@ public static partial class Maths
     #endregion
 
 }
+    
