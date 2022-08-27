@@ -36,6 +36,21 @@ public static partial class Maths
     }
 
     /// <summary>
+    ///     Returns the absolute value of an 8-bit signed integer.
+    /// </summary>
+    /// <param name="value">A number that is greater than or equal to System.SByte.MinValue, but less than or equal to System.SByte.MaxValue.</param>
+    /// <returns>
+    ///     An 8-bit signed integer, x, such that 0 ≤ x ≤ System.SByte.MaxValue.
+    /// </returns>
+    public static sbyte Abs(sbyte value)
+    {
+        if (value < 0)
+            value *= -1;
+
+        return value;
+    }
+
+    /// <summary>
     ///     Returns the absolute value of a 16-bit signed integer.
     /// </summary>
     /// <param name="value">A number that is greater than or equal to System.Int16.MinValue, but less than or equal to System.Int16.MaxValue.</param>
@@ -88,21 +103,6 @@ public static partial class Maths
     ///     A native signed integer, x, such that 0 ≤ x ≤ System.IntPtr.MaxValue.
     /// </returns>
     public static nint Abs(nint value)
-    {
-        if (value < 0)
-            value *= -1;
-
-        return value;
-    }
-
-    /// <summary>
-    ///     Returns the absolute value of an 8-bit signed integer.
-    /// </summary>
-    /// <param name="value">A number that is greater than or equal to System.SByte.MinValue, but less than or equal to System.SByte.MaxValue.</param>
-    /// <returns>
-    ///     An 8-bit signed integer, x, such that 0 ≤ x ≤ System.SByte.MaxValue.
-    /// </returns>
-    public static sbyte Abs(sbyte value)
     {
         if (value < 0)
             value *= -1;
@@ -465,6 +465,14 @@ public static partial class Maths
         return (index == num);
 
     }
+
+    /// <summary>
+    /// Returns 1 or -1, depending on the given number.
+    /// </summary>
+    /// <param name="num">Double-precision floating-number whose sign want to be found.</param>
+    /// <returns>Returns 1 if num > 0, retunr -1 if num < 0.</returns>
+    public static int Sign(double num)
+        => (int)(num / Abs(num));
 
     #endregion
 }
