@@ -3,41 +3,16 @@
     public class Symbol
     {
 
-        private string Sym = String.Empty;
+        private char sym = 'x';
 
-        public string sym
+        public char Sym
         {
-            get { return Sym; }
-            private set { Sym = value; }
+            get { return sym; }
+            private set { sym = value; }
         }
-
-        private double Coefficient = 1;
-
-        public double coefficient
-        {
-            get { return Coefficient; }
-            private set { Coefficient = value; }
-        }
-
-        private double Power = 1;
-
-        public double power
-        {
-            get { return Power; }
-            private set { Power = value; }  
-        }
-
-        public Symbol(string symbol)
-        {
-            this.Sym = symbol;
-        }
-
-        public Symbol(string symbol, double coefficient = 1, double power = 1)
-        {
-            this.Sym = symbol;
-            this.Coefficient = coefficient;
-            this.Power = power;
-        }
+        
+        public Symbol(char symbol)
+        => this.Sym = symbol;
 
         public override bool Equals(object? obj)
         {
@@ -54,17 +29,95 @@
         }
 
         public override string ToString()
-            => sym;
+            => $"{this.Sym}";
 
+        #region Addition.
 
-        public static Symbol operator +(Symbol sym) => sym;
-        public static Symbol operator -(Symbol sym) => new(sym.Sym, -sym.coefficient);
+        public static Polynomial operator +(Symbol symbol)
+            => new(new List<object> { symbol });
 
-        public static Symbol operator *(Symbol sym, double num) => new(sym.Sym, sym.coefficient * num);
-        public static Symbol operator /(Symbol sym, double num) => new(sym.Sym, sym.coefficient / num);
+        public static Polynomial operator +(Symbol symbol, double number)
+            => new(new List<object> { symbol, '+', number });
 
-        public static Symbol operator *(double num, Symbol sym) => new(sym.Sym, sym.coefficient * num);
-        public static Symbol operator /(double num, Symbol sym) => new(sym.Sym, num / sym.coefficient, -sym.power);
+        public static Polynomial operator +(double number, Symbol symbol)
+            => new(new List<object> { number, '+', symbol });
+
+        public static Polynomial operator +(Symbol symbol1, Symbol symbol2)
+        {
+            if (symbol1 == symbol2)
+                return new(new List<object> { 2, '*', symbol1 });
+
+            return new(new List<object> { symbol1, '+', symbol2 });
+        }
+
+        #endregion
+
+        #region Substraction
+
+        public static Polynomial operator -(Symbol symbol)
+            => new(new List<object> { '-', symbol });
+
+        public static Polynomial operator -(Symbol symbol, double number)
+            => new(new List<object> { symbol, '-', number });
+
+        public static Polynomial operator -(double number, Symbol symbol)
+            => new(new List<object> { number, '-', symbol });
+
+        public static Polynomial operator -(Symbol symbol1, Symbol symbol2)
+        {
+            if (symbol1 == symbol2)
+                return new(new List<object> { 0d });
+
+            return new(new List<object> { symbol1, '-', symbol2 });
+        }
+
+        #endregion
+
+        #region Multiplication
+
+        public static Polynomial operator *(Symbol symbol, double number)
+            => new(new List<object> { number, '*', symbol });
+
+        public static Polynomial operator *(double number, Symbol symbol)
+            => new(new List<object> { number, '*', symbol });
+
+        public static Polynomial operator *(Symbol symbol1, Symbol symbol2)
+        {
+            if (symbol1 == symbol2)
+                return new(new List<object> { symbol1, '^', 2 });
+
+            return new(new List<object> { symbol1, '*', symbol2 });
+        }
+
+        #endregion
+
+        #region Division
+
+        public static Polynomial operator /(Symbol symbol, double number)
+            => new(new List<object> { symbol, '/', number });
+
+        public static Polynomial operator /(double number, Symbol symbol)
+            => new(new List<object> { number, '/', symbol });
+
+        public static Polynomial operator /(Symbol symbol1, Symbol symbol2)
+        {
+            if(symbol1 == symbol2)
+                return new Polynomial(new List<object> { 1d });
+
+            return new(new List<object> { symbol1, '/', symbol2 });
+        }
+
+        #endregion
+
+        #region Comparision
+
+        public static bool operator ==(Symbol symbol1, Symbol symbol2)
+            => symbol1.Equals(symbol2);
+
+        public static bool operator !=(Symbol symbol1, Symbol symbol2)
+            => !symbol1.Equals(symbol2);
+
+        #endregion
     }
 
 
