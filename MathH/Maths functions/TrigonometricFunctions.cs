@@ -1,4 +1,6 @@
-﻿namespace cnums;
+﻿using static cnums.Consts;
+
+namespace cnums;
 
 public static partial class Maths
 {
@@ -14,39 +16,8 @@ public static partial class Maths
     /// </returns>
     public static double Sin(double angle)
     {
-        if (angle == System.Double.PositiveInfinity || angle == System.Double.NegativeInfinity || angle == System.Double.NaN)
-            return System.Double.NaN;
-
-        angle = PrivateFunctions.ModPi(angle);
-
-        double sum = 0;
-        double u;
-        int i = 0;
-
-        do
-        {
-            u = sum;
-
-            if (i % 2 == 0)
-                sum += Power((double)angle, 2 * i + 1) / (double)Factorial((double)2 * i + 1);
-
-            else
-                sum -= Power((double)angle, 2 * i + 1) / (double)Factorial((double)2 * i + 1);
-
-            i++;
-
-        } while (Abs((double)sum - u) > 10E-100);
-
-        if (Abs(sum - 0) < 10E-20)
-            return 0;
-
-        if (Abs(sum - 1) < 10E-10)
-            return 1;
-
-        if (Abs(sum - 1) < -10E-10)
-            return -1;
-
-        return sum;
+        (_, double sinAngle) = Cordic_SinCos(angle);
+        return sinAngle;
     }
 
     /// <summary>
@@ -58,32 +29,8 @@ public static partial class Maths
     /// </returns>
     public static double Cos(double angle)
     {
-        if (angle == System.Double.PositiveInfinity || angle == System.Double.NegativeInfinity || angle == System.Double.NaN)
-            return System.Double.NaN;
-
-        angle = PrivateFunctions.ModPi(angle);
-
-        double sum = 0;
-
-        for (int i = 0; i < 100; i++)
-        {
-            if (i % 2 == 0)
-                sum += Power((double)angle, 2 * i) / (double)Factorial((double)2 * i);
-
-            else
-                sum -= Power((double)angle, 2 * i) / (double)Factorial((double)2 * i);
-        }
-
-        if (Abs(sum - 0) < 10E-10)
-            return 0;
-
-        if (Abs(sum - 1) < 10E-10)
-            return 1;
-
-        if (Abs(sum - 1) < -10E-10)
-            return -1;
-
-        return sum;
+        (double cosAngle, _) = Cordic_SinCos(angle);
+        return cosAngle;
     }
 
     /// <summary>
@@ -94,7 +41,10 @@ public static partial class Maths
     /// A double-precision floating-point number, x. 
     /// </returns>
     public static double Tan(double angle)
-        => Sin(angle) / Cos(angle);
+    {
+        (double cosAngle, double sinAngle) = Cordic_SinCos(angle);
+        return sinAngle / cosAngle;
+    }
 
     /// <summary>
     /// Returns the cotangent value of the Double-precision floating-point given angle.
@@ -104,7 +54,16 @@ public static partial class Maths
     /// A double-precision floating-point number, x.
     /// </returns>
     public static double Cot(double angle)
-        => Cos(angle) / Sin(angle);
+    {
+        (double cosAngle, double sinAngle) = Cordic_SinCos(angle);
+        return cosAngle / sinAngle;
+    }
+
+    public static double Sec(double angle)
+        => 1 / Cos(angle);
+
+    public static double Csc(double angle)
+        => 1 / Sin(angle);
 
     /// <summary>
     /// Returns Sin(x) / x value of the Double-precision floating-point given angle.
@@ -127,72 +86,154 @@ public static partial class Maths
 
     public static double Asin(double num)
     {
-        if (num < -1 || num > 1) return System.Double.NaN;
+        if (1 < Abs(num)) throw new Exception("ArcSin cannot evaluate values higher than one, or lower than minus one.");
 
-        double sum = num;
-        double u;
-        int i = 1;
+        if (num == 0) return 0;
 
-        do
+        double theta = 0;
+        double[,] z = { { 1, 0 } };
+
+        double PowerOfTwo = 1;
+
+        double angle = 0;
+
+        for (int i = 0; i < 100; i++)
         {
-            u = sum;
-            double helper = Power(num, (i * 2) + 1) / ((i * 2) + 1);
+            double sign_z2, sigma;
 
-            double multi = 1, div = 1;
+            if (z[0, 0] < 0)
+                sign_z2 = -1;
+            else
+                sign_z2 = 1;
 
-            for (int j = 1; j <= i * 2; j++)
-                if (j % 2 == 0) div *= j;
-                else multi *= j;
+            if (num >= z[0, 1])
+                sigma = +sign_z2;
+            else
+                sigma = -sign_z2;
 
-            helper *= multi;
-            helper /= div;
+            if (i < Angles.Length)
+                angle = Angles[i];
+            else
+                angle /= 2;
 
-            sum += helper;
+            double[,] RotationMatrix =
+            {
+                {1, sigma * PowerOfTwo },
+                {-sigma * PowerOfTwo, 1 }
+            };
 
-        } while (Abs((double)sum - u) > 10E-2);
+            z = PrivateFunctions.MatricesMultiplication(
+                PrivateFunctions.MatricesMultiplication(z, RotationMatrix),
+                RotationMatrix);
 
-        return sum;
+            theta += 2.0 * sigma * angle;
+            num += num * PowerOfTwo * PowerOfTwo;
+            PowerOfTwo /= 2.0;
+        }
+        return theta;
     }
 
     public static double Acos(double num)
-        => (Consts.PI / 2) - Asin(num);
+    {
+        if (1 < Abs(num)) throw new Exception("ArcCos cannot evaluate values higher than one, or lower than minus one.");
+
+        double theta = 0;
+        double[,] z = { { 1, 0 } };
+
+        double PowerOfTwo = 1;
+
+        double angle = 0;
+
+        for (int i = 0; i < 100; i++)
+        {
+            double sign_z2, sigma;
+
+            if (z[0, 1] < 0)
+                sign_z2 = -1;
+            else
+                sign_z2 = 1;
+
+            if (num <= z[0, 0])
+                sigma = +sign_z2;
+            else
+                sigma = -sign_z2;
+
+            if (i < Angles.Length)
+                angle = Angles[i];
+            else
+                angle /= 2;
+
+            double[,] RotationMatrix =
+            {
+                {1, sigma * PowerOfTwo },
+                {-sigma * PowerOfTwo, 1 }
+            };
+
+            z = PrivateFunctions.MatricesMultiplication(
+                PrivateFunctions.MatricesMultiplication(z, RotationMatrix),
+                RotationMatrix);
+
+            theta += 2.0 * sigma * angle;
+            num += num * PowerOfTwo * PowerOfTwo;
+            PowerOfTwo /= 2.0;
+        }
+        return theta;
+    }
 
     public static double Atan(double num)
     {
-        double sum = 0;
+        double x1 = 1, y1 = num;
+        double signFactor;
 
-        if (num < 1 && num > -1)
+        if(x1 < 0 && y1 < 0)
         {
-            for (int c = 0; c < 100; c++)
-            {
-                if (c % 2 == 0) sum += Power(num, (c * 2 + 1)) / ((c * 2) + 1);
-                else sum -= Power(num, (c * 2 + 1)) / ((c * 2) + 1);
-            }
-
-            return sum;
+            x1 *= -1;
+            y1 *= -1;
         }
 
-        if (num >= 1) sum += Consts.PI / 2;
-        else if (num <= -1) sum -= Consts.PI / 2;
-
-
-        double u;
-        int i = 0;
-
-        do
+        if (x1 < 0)
         {
-            u = sum;
+            x1 *= -1;
+            signFactor = -1;
+        }
+        else if (y1 < 0)
+        {
+            y1 *= -1;
+            signFactor = -1;
+        }
+        else
+            signFactor = 1;
 
-            double helper = 1 / (((2 * i) + 1) * Power(num, (i * 2) + 1));
+        double theta = 0;
+        double PowerOfTwo = 1;
 
-            if (i % 2 == 0) sum -= helper;
-            else sum += helper;
+        double sigma, angle = 0;
 
-            i++;
+        for(int i = 0; i < 100; i++)
+        {
+            if (y1 <= 0.0)
+                sigma = +1.0;
+            else
+                sigma = -1.0;
 
-        } while (Abs((double)sum - u) > 10E-5);
+            if (i < Angles.Length)
+                angle = Angles[i];
+            else
+                angle /= 2.0;
 
-        return sum;
+            double x2 = x1 - sigma * PowerOfTwo * y1;
+            double y2 = sigma * PowerOfTwo * x1 + y1;
+
+            theta -= sigma * angle;
+
+            x1 = x2;
+            y1 = y2;
+
+            PowerOfTwo /= 2;
+        }
+
+        theta *= signFactor;
+        return theta;
     }
 
     public static double Asec(double num)
@@ -203,6 +244,101 @@ public static partial class Maths
 
     public static double Acot(double num)
         => (Consts.PI / 2) - Atan(num);
+
+    #endregion
+
+    private static (double cos, double sin) Cordic_SinCos(double beta)
+    {
+        double theta = PrivateFunctions.AngleShift(beta, -PI);
+        double SignFactor;
+
+        if (theta < -0.5 * PI)
+        {
+            theta += PI;
+            SignFactor = -1.0;
+        }
+        else if (0.5 * PI < theta)
+        {
+            theta -= PI;
+            SignFactor = -1.0;
+        }
+        else
+            SignFactor = +1.0;
+
+        double[,] v = { { 1, 0 } };
+        double PowerOfTwo = 1;
+        double angle = Angles[0];
+
+        double sigma;
+
+        for(int i = 0; i < 100; i++)
+        {
+            if (theta < 0.0)
+                sigma = -1.0;
+            else
+                sigma = 1.0;
+
+            double factor = sigma * PowerOfTwo;
+
+            double[,] RotationMatrix =
+            {
+                {1, factor },
+                {-factor, 1 }
+            };
+
+            v = PrivateFunctions.MatricesMultiplication(v, RotationMatrix);
+
+            theta -= sigma * angle;
+            PowerOfTwo /= 2;
+
+            if (Angles.Length <= (i + 1))
+                angle /= 2.0;
+            else
+                angle = Angles[i + 1];
+        }
+
+        v[0, 0] *= KProd * SignFactor;
+        v[0, 1] *= KProd * SignFactor;
+
+        
+        return (v[0, 0], v[0, 1]);
+    }
+
+    #region Trigonometric functions for Complex numbers
+
+    public static Complex Sin(Complex c)
+        => new(Sin(c.Re) * Cosh(c.Im), Cos(c.Re) * Sinh(c.Im));
+
+    public static Complex Cos(Complex c)
+        => new(Cos(c.Re) * Cosh(c.Im), -Sin(c.Re) * Sinh(c.Im));
+
+    public static Complex Tan(Complex c)
+        => Sin(c) / Cos(c);
+
+    public static Complex Cot(Complex c)
+        => Cos(c) / Sin(c);
+
+    public static Complex Sec(Complex c)
+        => 1 / Cos(c);
+
+    public static Complex Csc(Complex c)
+        => 1 / Sin(c);
+
+    #endregion
+
+    #region Inverse trigonometric functions for Complex numbers
+
+    public static Complex Asin(Complex c)
+        => (1 / j) * Ln(j * c + Sqrt(-(c * c) + 1));
+
+    public static Complex Acos(Complex c)
+        => (1 / j) * Ln(c + j * Sqrt(-(c * c) + 1));
+
+    public static Complex Atan(Complex c)
+        => (1 / (j * 2)) * Ln((j - c) / (j + c));
+
+    public static Complex Acot(Complex c)
+        => Atan(1 / c);
 
     #endregion
 }
