@@ -88,5 +88,52 @@
 
         internal static bool IsInteger(double number)
             => number % 1 == 0;
+
+        internal static bool CrossedDomains(Domain domain1, Domain domain2)
+        {
+            if ((domain1.Begin >= domain2.Begin && domain1.Begin <= domain2.End) ||
+           (domain2.Begin >= domain1.Begin && domain2.Begin <= domain1.End)) 
+                return true;
+            return false;
+        }
+
+        internal static double AngleShift(double alpha, double beta)
+        {
+            double gamma;
+
+            if (alpha < beta)
+                gamma = beta - ((beta - alpha) % (2.0 * Consts.PI)) + 2.0 * Consts.PI;
+            else
+                gamma = beta + ((alpha - beta) % (2.0 * Consts.PI));
+
+            return gamma;
+        }
+
+        internal static double[,] MatricesMultiplication(double[,] arr1, double[,] arr2)
+        {
+            int rA = arr1.GetLength(0);
+            int cA = arr1.GetLength(1);
+            int rB = arr2.GetLength(0);
+            int cB = arr2.GetLength(1);
+
+            double temp;
+            double[,] result = new double[rA, cB];
+
+            if (cA != rB)
+                throw new Exception("Incompatible matrices.");
+            
+            for (int i = 0; i < rA; i++)
+            {
+                for (int j = 0; j < cB; j++)
+                {
+                    temp = 0;
+                    for (int k = 0; k < cA; k++)
+                        temp += arr1[i, k] * arr2[k, j];
+                        
+                    result[i, j] = temp;
+                }
+            }
+            return result;
+        }
     }
 }
