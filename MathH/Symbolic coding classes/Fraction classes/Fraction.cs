@@ -20,6 +20,10 @@ public class Fraction
         private set { denominator = value; }
     }
 
+    public Fraction(double number)
+    {       
+    }
+
     public Fraction(double numerator, double denominator)
     {
         if (denominator == 0) throw new Exception("Cannot divide by zero.");
@@ -52,12 +56,41 @@ public class Fraction
         }
     }
 
+    public override bool Equals(object? obj)
+    {
+        if(obj == null) 
+            return false;
+
+        if (obj.GetType() != this.GetType()) 
+            return false;
+
+        Fraction fraction = (Fraction)obj;
+        if (this.Numerator * fraction.Denominator 
+            == this.Denominator * fraction.Numerator) 
+            return true;
+
+        return false;
+    }
+
+    public override int GetHashCode()
+        => throw new NotImplementedException();
+
     public override string ToString()
         => $"{numerator}/{denominator}";
 
-    public static Fraction operator +(Fraction fraction) => fraction;
+    #region Addition
 
-    public static Fraction operator -(Fraction fraction) => new(-fraction.Numerator, fraction.Denominator);
+    public static Fraction operator +(Fraction fraction)
+        => fraction;
+    
+    public static Fraction operator +(Fraction fraction, double number)
+    {
+        Fraction frc = new(number, 1);
+        return frc + fraction;
+    }
+
+    public static Fraction operator +(double number, Fraction fraction)
+        => fraction + number;
 
     public static Fraction operator +(Fraction fraction1, Fraction fraction2)
     {
@@ -70,6 +103,22 @@ public class Fraction
         return new(fraction1.Numerator + fraction2.Numerator, fraction1.Denominator);
     }
 
+    #endregion
+
+    #region Substraction
+
+    public static Fraction operator -(Fraction fraction)
+        => new(-fraction.Numerator, fraction.Denominator);
+
+    public static Fraction operator -(Fraction fraction, double number)
+    {
+        Fraction frc = new(number, 1);
+        return fraction - frc;
+    }
+
+    public static Fraction operator -(double number, Fraction fraction)
+        => -fraction + number;
+
     public static Fraction operator -(Fraction fraction1, Fraction fraction2)
     {
         if (fraction1.Denominator != fraction2.Denominator)
@@ -81,10 +130,54 @@ public class Fraction
         return new(fraction1.Numerator - fraction2.Numerator, fraction1.Denominator);
     }
 
+    #endregion
+
+    #region Multiplication
+
     public static Fraction operator *(Fraction fraction1, Fraction fraction2) 
         => new(fraction1.Numerator * fraction2.Numerator, fraction1.Denominator * fraction2.Denominator);
 
+    public static Fraction operator *(Fraction fraction, double number)
+        => new(fraction.Numerator * number, fraction.Denominator);
+
+    public static Fraction operator *(double number, Fraction fraction)
+        => new(number * fraction.Numerator, fraction.Denominator);
+
+    #endregion
+
+    #region Division
+
     public static Fraction operator /(Fraction fraction1, Fraction fraction2) 
         => fraction1 * new Fraction(fraction2.Denominator, fraction2.Numerator);
+
+    public static Fraction operator /(Fraction fraction, double number)
+        => new(fraction.Numerator, number * fraction.Denominator);
+
+    public static Fraction operator /(double number, Fraction fraction)
+        => new(number * fraction.Denominator, fraction.Numerator);
+
+    #endregion
+
+    #region Comparision
+
+    public static bool operator ==(Fraction fraction1, Fraction fraction2)
+        => fraction1.Equals(fraction2);
+
+    public static bool operator !=(Fraction fraction1, Fraction fraction2)
+        => !fraction1.Equals(fraction2);
+
+    public static bool operator ==(Fraction fraction, double number)
+        => fraction.Equals(new Fraction(number, 1));
+
+    public static bool operator !=(Fraction fraction, double number)
+        => !fraction.Equals(new Fraction(number, 1));
+
+    public static bool operator ==(double number, Fraction fraction)
+        => fraction.Equals(new Fraction(number, 1));
+
+    public static bool operator !=(double number, Fraction fraction)
+        => !fraction.Equals(new Fraction(number, 1));
+
+    #endregion
 }
 
