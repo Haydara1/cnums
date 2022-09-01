@@ -10,16 +10,29 @@
             get { return sym; }
             private set { sym = value; }
         }
-        
+
         public Symbol(char symbol)
-        => this.Sym = symbol;
+        {
+            if (Char.IsDigit(symbol) 
+                || Char.IsPunctuation(symbol)
+                || Char.IsWhiteSpace(symbol))
+                throw new Exception("Symbol cannot be a digit or a punctuation mark or a white space.");
+
+            this.Sym = symbol;
+        }
 
         public override bool Equals(object? obj)
         {
-            if (obj == null) return false;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj == null) 
+                return false;
+
+            if (obj.GetType() != this.GetType()) 
+                return false;
+
             Symbol symbol = (Symbol)obj;
-            if (symbol.sym == this.sym) return true;
+            if (symbol.sym == this.sym) 
+                return true;
+
             return false;
         }
 
@@ -45,7 +58,7 @@
         public static Polynomial operator +(Symbol symbol1, Symbol symbol2)
         {
             if (symbol1 == symbol2)
-                return new(new List<object> { 2, '*', symbol1 });
+                return new(new List<object> { 2d, '*', symbol1 });
 
             return new(new List<object> { symbol1, '+', symbol2 });
         }
