@@ -1,4 +1,6 @@
-﻿namespace cnums;
+﻿using System.Numerics;
+
+namespace cnums;
 
 public static partial class Maths
 {
@@ -247,6 +249,19 @@ public static partial class Maths
 
         return f;
     }
+
+    public static BigInteger Factorial(BigInteger num)
+    {
+        BigInteger f;
+
+        if (num == 0 || num == 1)
+            return 1;
+        else
+            f = (BigInteger)(num * Factorial((BigInteger)num - 1));
+
+        return f;
+    }
+
     #endregion
 
     #region Miscellaneous.
