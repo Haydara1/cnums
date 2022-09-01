@@ -4,10 +4,10 @@ public class Polynomial
 {
     private List<object> container;
 
-    public List<object> Container
+    private List<object> Container
     {
         get { return container; }
-        private set { container = value; }
+        set { container = value; }
     }
 
     internal Polynomial(List<object> objects)
@@ -30,6 +30,8 @@ public class Polynomial
         return poly;
     }
 
+    #region Addition
+
     public static Polynomial operator +(Polynomial polynomial)
         => polynomial;
 
@@ -40,10 +42,19 @@ public class Polynomial
         List<object> cn = polynomial.Container;
         bool insert = true;
 
+        //Numbers can only be surounded by '-' or '+' operators,
+        //using this logic helps us finding the polynomial's constant,
+        //and then adding the number.
+
+        //Putting in mind that number can be a negative number too, 
+        //which requires changing the sign of the constant after the addition. 
+
         for (int i = 0; i < cn.Count; i++)
         {
-            if (cn[i].GetType() != number.GetType())
+            if (cn[i].GetType() != number.GetType()) //Check element's type
                 continue;
+
+            //Different index cases
 
             if(i == 0)
             {
@@ -56,6 +67,8 @@ public class Polynomial
                         cn[i] = Maths.Abs(Convert.ToDouble(cn[i]));
                         cn.Insert(0, '-');
                     }
+                    else if (Convert.ToDouble(cn[i]) == 0)
+                        cn = new List<object> { 0d };
 
                     insert = false;
                     break;
@@ -72,6 +85,8 @@ public class Polynomial
                             cn[i] = Maths.Abs(Convert.ToDouble(cn[i]));
                             cn.Insert(0, '-');
                         }
+                        else if (Convert.ToDouble(cn[i]) == 0)
+                            cn = new List<object> { 0d };
 
                         insert = false;
                         break;
@@ -102,6 +117,12 @@ public class Polynomial
                             cn[i] = Maths.Abs(Convert.ToDouble(cn[i]));
                             cn[i - 1] = '+';
                         }
+                    }
+
+                    if (Convert.ToDouble(cn[i]) == 0)
+                    {
+                        cn.RemoveAt(i);
+                        cn.RemoveAt(i - 1);
                     }
 
                     insert = false;
@@ -136,6 +157,12 @@ public class Polynomial
                         }
                     }
 
+                    if (Convert.ToDouble(cn[i]) == 0)
+                    {
+                        cn.RemoveAt(i);
+                        cn.RemoveAt(i - 1);
+                    }
+
                     insert = false;
                     break;
                 }
@@ -160,13 +187,187 @@ public class Polynomial
     public static Polynomial operator +(double number, Polynomial polynomial)
         => polynomial + number;
 
+    public static Polynomial operator +(Polynomial polynomial, Symbol symbol)
+    {   
+        List<object> cn = polynomial.Container;
+        bool insert = true;
+
+        for(int i = 0; i < cn.Count; i++)
+        {
+            if (!symbol.Equals(cn[i]))
+                continue;
+
+            bool brk = false;
+
+            if (i == 0)
+            {
+                if (cn[i + 1].ToString() == "+" 
+                    || cn[i + 1].ToString() == "-")
+                {
+                    cn.Insert(0, "*");
+                    cn.Insert(0, 2d);
+
+                    insert = false;
+                    break;
+                }
+
+                continue;
+            }
+
+            else if(i == cn.Count - 1)
+            {
+                switch(cn[i - 1].ToString())
+                {
+                    case "+":
+                        cn.Insert(i, "*");
+                        cn.Insert(i, 2d);
+
+                        brk = true;
+                        insert = false;
+                        break;
+
+                    case "-":
+                        cn.RemoveAt(i);
+                        cn.RemoveAt(i - 1);
+
+                        brk = true;
+                        insert = false;
+                        break;
+
+                    case "*":
+                        if (cn[i - 2].GetType() == typeof(double))
+                        {
+                            if(i < 3)
+                                cn[i - 2] = Convert.ToDouble(cn[i - 2]) + 1d;
+                            else
+                            {
+                                if (cn[i - 3].ToString() == "+")
+                                    cn[i - 2] = Convert.ToDouble(cn[i - 2]) + 1d;
+                                else if (cn[i - 3].ToString() == "-")
+                                {
+                                    cn[i - 2] = -Convert.ToDouble(cn[i - 2]) + 1d;
+                                    if (Convert.ToDouble(cn[i - 2]) < 0)
+                                        cn[i - 2] = Math.Abs(Convert.ToDouble(cn[i - 2]));
+                                    else if(Convert.ToDouble(cn[i - 2]) > 0)
+                                    {
+                                        cn[i - 2] = Math.Abs(Convert.ToDouble(cn[i - 2]));
+                                        cn[i - 3] = '+';
+                                    }
+                                    else
+                                    {
+                                        cn.RemoveAt(i);
+                                        cn.RemoveAt(i - 1);
+                                        cn.RemoveAt(i - 2);
+                                        cn.RemoveAt(i - 3);
+                                    }
+                                    
+                                }
+                            }
+                            brk = true;
+                            insert = false;
+                        }
+
+                        break;
+                }
+
+                if (brk) break;
+
+            }
+
+            else
+            {
+                if (!(cn[i + 1].ToString() == "+"
+                    || cn[i + 1].ToString() == "-"))
+                    continue;
+
+                if (cn[i - 1].ToString() == "+")
+                {
+                    cn.Insert(i, "*");
+                    cn.Insert(i, 2d);
+
+                    insert = false;
+                    break;
+                }
+                else if (cn[i - 1].ToString() == "-")
+                {
+                    cn.RemoveAt(i);
+                    cn.RemoveAt(i - 1);
+
+                    insert = false;
+                    break;
+                }
+                else if (cn[i - 1].ToString() == "*")
+                {
+
+                    if (cn[i - 2].GetType() == typeof(double))
+                    {
+                        if (i < 3)
+                            cn[i - 2] = Convert.ToDouble(cn[i - 2]) + 1d;
+                        else
+                        {
+                            if (cn[i - 3].ToString() == "+")
+                                cn[i - 2] = Convert.ToDouble(cn[i - 2]) + 1d;
+                            else if (cn[i - 3].ToString() == "-")
+                            {
+                                cn[i - 2] = -Convert.ToDouble(cn[i - 2]) + 1d;
+                                if (Convert.ToDouble(cn[i - 2]) < 0)
+                                    cn[i - 2] = Math.Abs(Convert.ToDouble(cn[i - 2]));
+                                else if (Convert.ToDouble(cn[i - 2]) > 0)
+                                {
+                                    cn[i - 2] = Math.Abs(Convert.ToDouble(cn[i - 2]));
+                                    cn[i - 3] = '+';
+                                }
+                                else
+                                {
+                                    cn.RemoveAt(i);
+                                    cn.RemoveAt(i - 1);
+                                    cn.RemoveAt(i - 2);
+                                    cn.RemoveAt(i - 3);
+                                }
+                            }
+                        }
+
+                        insert = false;
+                        break;
+                    }
+                    continue;
+                }
+                continue;
+            }
+        }
+
+        if (insert)
+        {
+            cn.Add("+");
+            cn.Add(symbol);
+        }
+
+        return new(cn);
+    }
+
+    public static Polynomial operator +(Symbol symbol, Polynomial polynomial)
+        => polynomial + symbol;
+
+    #endregion
+
+    #region Substraction
+
     public static Polynomial operator -(Polynomial polynomial)
     {
         List<object> cn = polynomial.Container;
 
-        cn.Insert(0, '(');
-        cn.Insert(0, '-');
-        cn.Add(')');
+        for(int i = 0; i < cn.Count; i++)
+        {
+            if (cn[i].ToString() == "+")
+                cn[i] = '-';
+            else if (cn[i].ToString() == "-")
+                cn[i] = "+";
+            else
+                continue;
+        }
+
+        if (cn[0].ToString() != "+" || cn[0].ToString() != "-")
+            cn.Insert(0, '-');  
 
         return new(cn);
     }
@@ -176,5 +377,164 @@ public class Polynomial
 
     public static Polynomial operator -(double number, Polynomial polynomial)
         => -polynomial + number;
+
+    public static Polynomial operator -(Polynomial polynomial, Symbol symbol)
+
+    {
+        List<object> cn = polynomial.Container;
+        bool insert = true;
+
+        for (int i = 0; i < cn.Count; i++)
+        {
+            if (!symbol.Equals(cn[i]))
+                continue;
+
+            bool brk = false;
+
+            if (i == 0)
+            {
+                if (cn[i + 1].ToString() == "+"
+                    || cn[i + 1].ToString() == "-")
+                {
+                    cn[i] = 0d;
+
+                    insert = false;
+                    break;
+                }
+
+                continue;
+            }
+
+            else if (i == cn.Count - 1)
+            {
+                switch (cn[i - 1].ToString())
+                {
+                    case "-":
+                        cn.Insert(i, "*");
+                        cn.Insert(i, 2d);
+
+                        brk = true;
+                        insert = false;
+                        break;
+
+                    case "+":
+                        cn.RemoveAt(i);
+                        cn.RemoveAt(i - 1);
+
+                        brk = true;
+                        insert = false;
+                        break;
+
+                    case "*":
+                        if (cn[i - 2].GetType() == typeof(double))
+                        {
+                            if (i < 3)
+                                cn[i - 2] = Convert.ToDouble(cn[i - 2]) - 1d;
+                            else
+                            {
+                                if (cn[i - 3].ToString() == "+")
+                                    cn[i - 2] = Convert.ToDouble(cn[i - 2]) - 1d;
+                                else if (cn[i - 3].ToString() == "-")
+                                {
+                                    cn[i - 2] = -Convert.ToDouble(cn[i - 2]) - 1d;
+                                    if (Convert.ToDouble(cn[i - 2]) < 0)
+                                        cn[i - 2] = Math.Abs(Convert.ToDouble(cn[i - 2]));
+                                    else if (Convert.ToDouble(cn[i - 2]) > 0)
+                                    {
+                                        cn[i - 2] = Math.Abs(Convert.ToDouble(cn[i - 2]));
+                                        cn[i - 3] = '+';
+                                    }
+                                    else
+                                    {
+                                        cn.RemoveAt(i);
+                                        cn.RemoveAt(i - 1);
+                                        cn.RemoveAt(i - 2);
+                                        cn.RemoveAt(i - 3);
+                                    }
+
+                                }
+                            }
+
+                                brk = true;
+                            insert = false;
+                        }
+                        break;
+                }
+                if (brk) break;
+
+            }
+
+            else
+            {
+                if (!(cn[i + 1].ToString() == "+"
+                    || cn[i + 1].ToString() == "-"))
+                    continue;
+
+                if (cn[i - 1].ToString() == "-")
+                {
+                    cn.Insert(i, "*");
+                    cn.Insert(i, 2d);
+
+                    insert = false;
+                    break;
+                }
+                else if (cn[i - 1].ToString() == "+")
+                {
+                    cn.RemoveAt(i);
+                    cn.RemoveAt(i - 1);
+
+                    insert = false;
+                    break;
+                }
+                else if (cn[i - 1].ToString() == "*")
+                {
+
+                    if (cn[i - 2].GetType() == typeof(double))
+                    {
+                        if (cn[i - 3].ToString() == "+")
+                            cn[i - 2] = Convert.ToDouble(cn[i - 2]) - 1d;
+                        else if (cn[i - 3].ToString() == "-")
+                        {
+                            cn[i - 2] = -Convert.ToDouble(cn[i - 2]) - 1d;
+                            if (Convert.ToDouble(cn[i - 2]) < 0)
+                                cn[i - 2] = Math.Abs(Convert.ToDouble(cn[i - 2]));
+                            else if (Convert.ToDouble(cn[i - 2]) > 0)
+                            {
+                                cn[i - 2] = Math.Abs(Convert.ToDouble(cn[i - 2]));
+                                cn[i - 3] = '+';
+                            }
+                            else
+                            {
+                                cn.RemoveAt(i);
+                                cn.RemoveAt(i - 1);
+                                cn.RemoveAt(i - 2);
+                                cn.RemoveAt(i - 3);
+                            }
+
+                        }
+                    
+
+                        insert = false;
+                        break;
+                    }
+                    continue;
+                }
+                continue;
+            }
+        }
+
+        if (insert)
+        {
+            cn.Add("-");
+            cn.Add(symbol);
+        }
+
+        return new(cn);
+    }
+
+    public static Polynomial operator -(Symbol symbol, Polynomial polynomial)
+        => -polynomial + symbol;
+
+    #endregion
 }
 
