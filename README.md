@@ -1,5 +1,17 @@
 # cnums
-Maths library containing pre-calculus, calculus functions, and consts, for C#.
+Maths library written in C#, for C# programming language.
 
-Also includes base objects for symbolic coding, like the lisp language, or the python's library "sympy".
-Functions are calculated with a high precision, using different software-based algorithms, without using the built-in C# library, System.Math.
+### Functions: 
+  Different maths elementary and special funtions written in C#, implemented with high-precision output algorithms, without the use of C# built-in library System.Math.
+
+### Symbolic coding:
+  Integrated classes that are able to give the user the ability to code complete math expressions, with the use of variables.
+  
+  *Examples:* 
+  
+   * Lisp programming language, that was created for mathematical notation in computer programming, [*wikipedia.*](https://en.wikipedia.org/wiki/Lisp_(programming_language))
+    
+   * SymPy python package, library for symbolic mathematics, [*documentation.*](https://docs.sympy.org/latest/index.html)
+   
+  
+    
