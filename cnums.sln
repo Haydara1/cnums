@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cnums", "MathH\cnums.csproj", "{213F90E0-C901-44D8-A5DE-488AB3E9A8C8}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShowCase", "ShowCase\ShowCase.csproj", "{148D0654-39B8-41DE-884E-16A2A49FAEFF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cnums", "src\Main\cnums.csproj", "{213F90E0-C901-44D8-A5DE-488AB3E9A8C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
