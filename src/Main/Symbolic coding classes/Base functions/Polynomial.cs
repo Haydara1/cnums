@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using static cnums.PrivateFunctions;
 
 namespace cnums;
 
@@ -6,7 +7,7 @@ public class Polynomial
 {
     private List<object> container;
 
-    private List<object> Container
+    internal List<object> Container
     {
         get { return container; }
         set { container = value; }
@@ -31,7 +32,7 @@ public class Polynomial
         return poly;
     }
 
-    private void SetDictionaries()
+    internal void SetDictionaries()
     {
         List<object> Cn = this.Container;
 
@@ -53,54 +54,7 @@ public class Polynomial
         SymbolsDicitonary = symbolDict;
     }
 
-    private static List<Polynomial> DividePolynomial(Polynomial polynomial)
-    {
-        List<object> cn = polynomial.Container;
-        List<Polynomial> polynomials = new();
-        List<object> SinglePolynomial = new();
-
-        for(int i = 0; i < cn.Count; i++)
-        {
-            if (cn[i].ToString() == "+")
-            {
-                polynomials.Add(new(SinglePolynomial));
-                SinglePolynomial = new();
-                SinglePolynomial.Add('+');
-            }
-            else if (cn[i].ToString() == "-")
-            {
-                polynomials.Add(new(SinglePolynomial));
-                SinglePolynomial = new();
-                SinglePolynomial.Add('-');
-            }
-            else
-                SinglePolynomial.Add(cn[i]);
-        }
-
-        polynomials.Add(new(SinglePolynomial));
-
-        return polynomials;
-    }
-
-    private static bool SingleTerm(Polynomial polynomial)
-    {
-        int index = 0;
-
-        foreach (object obj in polynomial.Container)
-            if (obj.ToString() == "+"
-                || obj.ToString() == "-")
-                index++;
-
-        return !(index > 1);
-    }
-
-    private static bool ContainsSymbols(Polynomial polynomial)
-    {
-        for(int i = 0; i < polynomial.Container.Count; i++) 
-            if(polynomial.Container[i].GetType() == typeof(cnums.Symbol))
-                return true;
-        return false;
-    }
+    
 
     #region Addition
 
@@ -182,75 +136,78 @@ public class Polynomial
         => polynomial + number;
 
     public static Polynomial operator +(Polynomial polynomial, Symbol symbol)
-    {   
+    {
+        Symbol[] symbols = GetSymbols(polynomial);
+        List<object> cn;
 
-        polynomial.SetDictionaries();
-        List<object> cn = polynomial.Container;
-
-        Dictionary<int, Symbol> dict = polynomial.SymbolsDicitonary;
-        bool insert = true, before = true;
-
-        foreach ((int index, Symbol sym) in dict)
+        if(!symbols.Contains(symbol))
         {
-            if (sym != symbol) continue;
-
-            bool begin = false, end = false;
-
-            try
-            {
-                if (cn[index - 1].ToString() == "+"
-                || cn[index - 1].ToString() == "-")
-                    begin = true;
-            }
-            catch
-            {
-                begin = true;
-                before = false;
-            }
-
-            try
-            {
-                if (cn[index + 1].ToString() == "+"
-                || cn[index + 1].ToString() == "-")
-                    end = true;
-            }
-            catch
-            {
-                end = true;
-            }
-
-            if (begin && end)
-            {
-                if (before)
-                {
-                    if (cn[index - 1].ToString() == "-")
-                    {
-                        cn.RemoveAt(index - 1);
-                        cn.RemoveAt(index - 1);
-                    }
-                    else if(cn[index - 1].ToString() == "+")
-                    {
-                        cn.Insert(index - 1, 2d);
-                        cn.Insert(index - 1, '*');
-                    }
-                    else if (cn[index - 1].ToString() == "*")
-                    {
-                        
-                    }
-                        
-                }
-                insert = false;
-                break;
-            }
-        }
-
-        if (insert)
-        {
+            cn = polynomial.Container;
             cn.Add('+');
             cn.Add(symbol);
+            return new(cn);
         }
 
-        return new(cn);
+        List<Polynomial> polynomials = DividePolynomial(polynomial);
+        cn = new();
+
+        foreach(Polynomial poly in polynomials)
+        {
+            if (!ContainsSymbols(poly)) //Checks if it contains symbols.
+            {
+                foreach (object obj in poly.Container)
+                    cn.Add(obj);
+                continue;
+            }
+
+            symbols = GetSymbols(poly);
+            if (!symbols.Contains(symbol)) //Checks if it contains the same symbol.
+            {
+                foreach (object obj in poly.Container)
+                    cn.Add(obj);
+                continue;
+            }
+
+            else if (symbols.Length > 1) //Checks if it contains more than one symbol.
+            {
+                foreach (object obj in poly.Container)
+                    cn.Add(obj);
+                continue;
+            }
+
+            List<object> polyContainer = poly.Container;
+
+            //Checked that this part of polynomial only has one variable,
+            //that is the same as the added one.
+
+            for(int i = 0; i < polyContainer.Count; i++)
+            {
+                if (polyContainer[i].GetType() != typeof(Symbol))
+                    continue;
+
+                if(i == 0)
+                {
+                    polyContainer.Insert(0, '*');
+                    polyContainer.Insert(0, 2d);
+                }
+                else if(i == 1)
+                {
+                    if (polyContainer[0].ToString() == "-")
+                    {
+                        polyContainer = new() { 0d };
+                        break;
+                    }
+                    else
+                    {
+                        polyContainer.Insert(1, '*');
+                        polyContainer.Insert(1, 2d);
+                    }
+                }
+                
+            }
+
+        }
+
     }
 
     public static Polynomial operator +(Symbol symbol, Polynomial polynomial)
@@ -287,7 +244,11 @@ public class Polynomial
     }
 
     public static Polynomial operator -(Polynomial polynomial, double number)
-        => polynomial + (-number);
+    { 
+        if(number < 0) return polynomial + Maths.Abs(number);
+        else if(number == 0) return polynomial;
+        
+    }
 
     public static Polynomial operator -(double number, Polynomial polynomial)
         => -polynomial + number;
