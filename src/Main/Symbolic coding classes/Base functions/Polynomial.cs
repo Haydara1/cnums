@@ -82,7 +82,7 @@ public class Polynomial
         return polynomials;
     }
 
-    private static bool SingleTerm(this Polynomial polynomial)
+    private static bool SingleTerm(Polynomial polynomial)
     {
         int index = 0;
 
@@ -94,7 +94,7 @@ public class Polynomial
         return !(index > 1);
     }
 
-    private static bool ContainsSymbols(this Polynomial polynomial)
+    private static bool ContainsSymbols(Polynomial polynomial)
     {
         for(int i = 0; i < polynomial.Container.Count; i++) 
             if(polynomial.Container[i].GetType() == typeof(cnums.Symbol))
@@ -225,17 +225,19 @@ public class Polynomial
                 {
                     if (cn[index - 1].ToString() == "-")
                     {
-                        if (number > constant)
-                        {
-                            cn[index] = number - constant;
-                            cn[index - 1] = '+';
-                        }
-                        else
-                            cn[index] = constant - number;
-
+                        cn.RemoveAt(index - 1);
+                        cn.RemoveAt(index - 1);
                     }
-                    else
-                        cn[index] = constant + number;
+                    else if(cn[index - 1].ToString() == "+")
+                    {
+                        cn.Insert(index - 1, 2d);
+                        cn.Insert(index - 1, '*');
+                    }
+                    else if (cn[index - 1].ToString() == "*")
+                    {
+                        
+                    }
+                        
                 }
                 insert = false;
                 break;
@@ -245,7 +247,7 @@ public class Polynomial
         if (insert)
         {
             cn.Add('+');
-            cn.Add(number);
+            cn.Add(symbol);
         }
 
         return new(cn);
