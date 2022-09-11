@@ -37,9 +37,7 @@
         }
 
         public override int GetHashCode()
-        {
-            throw new NotSupportedException();
-        }
+            => (int) sym;
 
         public override string ToString()
             => $"{this.Sym}";
