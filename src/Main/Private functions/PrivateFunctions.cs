@@ -1,6 +1,6 @@
 ﻿namespace cnums
 {
-    internal partial class PrivateFunctions
+    internal static partial class PrivateFunctions
     {
         private static double Normalize(double num)
         {
