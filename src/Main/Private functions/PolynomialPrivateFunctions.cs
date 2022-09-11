@@ -13,14 +13,12 @@ internal static partial class PrivateFunctions
             if (cn[i].ToString() == "+")
             {
                 polynomials.Add(new(SinglePolynomial));
-                SinglePolynomial = new();
-                SinglePolynomial.Add('+');
+                SinglePolynomial = new() { '+' };
             }
             else if (cn[i].ToString() == "-")
             {
                 polynomials.Add(new(SinglePolynomial));
-                SinglePolynomial = new();
-                SinglePolynomial.Add('-');
+                SinglePolynomial = new() { '-' };
             }
             else
                 SinglePolynomial.Add(cn[i]);
@@ -31,7 +29,7 @@ internal static partial class PrivateFunctions
         return polynomials;
     }
 
-    internal static bool SingleTerm(Polynomial polynomial)
+    internal static bool SingleTerm(this Polynomial polynomial)
     {
         int index = 0;
 
@@ -43,22 +41,49 @@ internal static partial class PrivateFunctions
         return !(index > 1);
     }
 
-    internal static bool ContainsSymbols(Polynomial polynomial)
+    internal static bool ContainsSymbols(this Polynomial polynomial)
     {
-        for (int i = 0; i < polynomial.Container.Count; i++)
-            if (polynomial.Container[i].GetType() == typeof(cnums.Symbol))
+        foreach(object obj in polynomial.Container)
+            if (obj.GetType() == typeof(cnums.Symbol))
                 return true;
         return false;
     }
 
-    internal static Symbol[] GetSymbols(Polynomial polynomial)
+    internal static Symbol[] GetSymbols(this Polynomial polynomial)
     {
         polynomial.SetDictionaries();
-        Dictionary<int, Symbol> symbols = polynomial.SymbolsDicitonary;
+        return polynomial.SymbolsDicitonary.Values.Distinct().ToArray(); ;
+    }
 
-        Symbol[] result = symbols.Values.ToArray();
-        result = result.Distinct().ToArray();
+    internal static Symbol[] GetSymbols(this Polynomial polynomial, bool distinct)
+    {
+        if (distinct)
+            return GetSymbols(polynomial);
+        return polynomial.SymbolsDicitonary.Values.ToArray();
+    }
 
-        return result;
+    internal static int GetPartsCount(this Polynomial polynomial)
+    {
+        Object[] cn = polynomial.Container.ToArray();
+        int index = 0;
+
+        if (!(cn[index].ToString() == "+"
+            || cn[index].ToString() == "-"))
+                index++;
+
+        foreach (object obj in cn)
+            if (obj.ToString() == "+"
+                || obj.ToString() == "-")
+                index++;
+
+        return index;
+    }
+
+    internal static int GetConstantIndex(Polynomial polynomial)
+    {
+        for (int i = 0; i < polynomial.Container.Count; i++)
+            if (polynomial.Container.GetType() == typeof(double))
+                return i;
+        return -1;
     }
 }
