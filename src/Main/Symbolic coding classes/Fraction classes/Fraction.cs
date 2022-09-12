@@ -1,4 +1,5 @@
-﻿using static cnums.Maths;
+﻿using System.Runtime.CompilerServices;
+using static cnums.Maths;
 
 namespace cnums;
 
@@ -26,34 +27,24 @@ public class Fraction
 
     public Fraction(double numerator, double denominator)
     {
-        if (denominator == 0) throw new Exception("Cannot divide by zero.");
+        if (denominator == 0) throw new DivideByZeroException("Cannot divide by zero.");
 
-        this.numerator = numerator;
-        this.denominator = denominator; 
+        this.numerator = Abs(numerator) * (Sign(numerator) * Sign(denominator));
+        this.denominator = Abs(denominator); 
     }
 
-
-    public Fraction(Function func1, Function func2)
+    static public Fraction Reduce(Fraction fraction)
     {
-
-    }
-
-    public void Simplify()
-    {
-        if((numerator < 0 && denominator < 0) || denominator < 0)
+        if(PrivateFunctions.IsInteger(fraction.Numerator) && PrivateFunctions.IsInteger(fraction.Denominator))
         {
-            numerator *= -1;
-            denominator *= -1;
+            int a = Convert.ToInt32(fraction.Numerator);
+            int b = Convert.ToInt32(fraction.Denominator);
+
+            fraction.Numerator /= GCD(a, b);
+            fraction.Denominator /= GCD(a, b);
         }
 
-        if(PrivateFunctions.IsInteger(numerator) && PrivateFunctions.IsInteger(denominator))
-        {
-            int a = Convert.ToInt32(numerator);
-            int b = Convert.ToInt32(denominator);
-
-            numerator /= GCD(a, b);
-            denominator /= GCD(a, b);
-        }
+        return new(fraction.Numerator, fraction.Denominator);
     }
 
     public override bool Equals(object? obj)
@@ -81,7 +72,7 @@ public class Fraction
     #region Addition
 
     public static Fraction operator +(Fraction fraction)
-        => fraction;
+        => Reduce(fraction);
     
     public static Fraction operator +(Fraction fraction, double number)
     {
@@ -100,7 +91,7 @@ public class Fraction
             fraction2.Numerator *= fraction1.Denominator;
         }
 
-        return new(fraction1.Numerator + fraction2.Numerator, fraction1.Denominator);
+        return Reduce(new(fraction1.Numerator + fraction2.Numerator, fraction1.Denominator));
     }
 
     #endregion
