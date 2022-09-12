@@ -3,8 +3,17 @@ using static cnums.Maths;
 
 namespace cnums
 {
-    public class Complex //a + ib
+    public struct Complex //a + ib
     {
+        //Zero Complex
+        public static readonly Complex Zero = new Complex(0, 0);
+
+        //One Complex
+        public static readonly Complex One = new Complex(1, 0);
+
+        //One Imaginary
+        public static readonly Complex ImaginaryOne = new Complex(0, 1);
+
         private double Real; //Real part of the complex number. (a)
 
         public double Re
@@ -13,68 +22,63 @@ namespace cnums
             set { Real = value; }
         }
 
-        private double Immaginary; //Immaginary part of the complex number. (b)
+        private double Imaginary; //Immaginary part of the complex number. (b)
 
         public double Im
         {
-            get { return Immaginary; }
-            set { Immaginary = value; }
+            get { return Imaginary; }
+            set { Imaginary = value; }
         }
 
         public Complex(double Re = 0, double Im = 0) //Constructor
         {
             Real = Re;
-            Immaginary = Im;
+            Imaginary = Im;
         }
 
-        public Complex(double R = 0, double Theta = 0, bool fromPolarForm = true) //Constuctor, given parameters in polar form.
-        {
-            if (!fromPolarForm)
-            {
-                Real = Re;
-                Immaginary = Im;
-            }
-            Real = R * Cos(Theta); // a = r * cos(theta)
-            Immaginary = R * Sin(Theta); //b = r * sin(theta)
+        public Complex(uint Modulus = 0, double Theta = 0) //Constuctor, given parameters in polar form.
+        {   
+            Real = Modulus * Cos(Theta); // a = r * cos(theta)
+            Imaginary = Modulus * Sin(Theta); //b = r * sin(theta)
         }
 
         public double Modulus() // The same as taking the absolute value of a complex number
-            => Abs(new Complex(Real, Immaginary)); 
+            => Abs(new Complex(Real, Imaginary)); 
 
         public double Arg()
         {
             // Getting magnitude
-            double magnitude = Abs(new Complex(Real, Immaginary)); 
+            double magnitude = Abs(new Complex(Real, Imaginary)); 
 
-            double theta = Asin(Abs(Immaginary) / magnitude); // Sin(theta) = b / r
+            double theta = Asin(Abs(Imaginary) / magnitude); // Sin(theta) = b / r
 
-            if (Immaginary >= 0 && Real >= 0) return theta; // First quadrant
-            else if (Immaginary >= 0 && Real <= 0) return PI - theta; // Second quadrant
-            else if (Immaginary <= 0 && Real <= 0) return PI + theta; // Third quadrant
+            if (Imaginary >= 0 && Real >= 0) return theta; // First quadrant
+            else if (Imaginary >= 0 && Real <= 0) return PI - theta; // Second quadrant
+            else if (Imaginary <= 0 && Real <= 0) return PI + theta; // Third quadrant
             else return -theta; // Fourth quadrant
         }
 
         public Complex Conjugate()
-            => new(Real, -Immaginary);
+            => new(Real, -Imaginary);
 
         public string DescartianForm()
         {
             string s = Real.ToString();
 
-            if (Real == 0 && Immaginary == 0) return "0";
+            if (Real == 0 && Imaginary == 0) return "0";
 
             else if (Real == 0)
             {
-                if (Immaginary == 1) return "i";
-                else if (Immaginary == -1) return "-i";
-                else return $"{Immaginary}i";
+                if (Imaginary == 1) return "i";
+                else if (Imaginary == -1) return "-i";
+                else return $"{Imaginary}i";
             }
 
-            else if (Immaginary == 0) return $"{Real}";
+            else if (Imaginary == 0) return $"{Real}";
 
-            if (Immaginary > 0) s += $"+{Immaginary}i";
-            else if (Immaginary == 0) { }
-            else s += $"{Immaginary}i";
+            if (Imaginary > 0) s += $"+{Imaginary}i";
+            else if (Imaginary == 0) { }
+            else s += $"{Imaginary}i";
 
             return s;
         }
