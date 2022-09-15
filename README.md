@@ -1,6 +1,9 @@
 # cnums
 Maths library written in C#, for C# programming language.
 
+## Advantages:
+- Code written in pure C#.
+
 ### Functions: 
   Different maths elementary and special funtions written in C#, implemented with high-precision output algorithms, without the use of C# built-in library System.Math.
 
