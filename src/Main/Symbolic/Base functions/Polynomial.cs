@@ -1,6 +1,6 @@
 ﻿using static cnums.PrivateFunctions;
 
-namespace cnums;
+namespace cnums.Symbolic;
 
 public class Polynomial
 {
@@ -43,8 +43,8 @@ public class Polynomial
             if (Cn[i].GetType() == typeof(System.Double))
                 doubleDict.Add(i, (System.Double)Cn[i]);
 
-            else if (Cn[i].GetType() == typeof(cnums.Symbol))
-                symbolDict.Add(i, (cnums.Symbol)Cn[i]);
+            else if (Cn[i].GetType() == typeof(Symbol))
+                symbolDict.Add(i, (Symbol)Cn[i]);
 
             else continue;
         }
@@ -191,7 +191,7 @@ public class Polynomial
 
             for(int i = 0; i < polyContainer.Count; i++)
             {   
-                if (polyContainer[i].GetType() != typeof(cnums.Symbol))
+                if (polyContainer[i].GetType() != typeof(Symbol))
                     continue;
 
                 else if (i < polyContainer.Count - 2

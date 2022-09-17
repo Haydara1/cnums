@@ -1,4 +1,4 @@
-﻿namespace cnums
+﻿namespace cnums.Symbolic
 {
     public class Symbol
     {

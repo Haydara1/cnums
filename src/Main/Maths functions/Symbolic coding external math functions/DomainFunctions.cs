@@ -1,4 +1,6 @@
-﻿namespace cnums;
+﻿using cnums.Symbolic;
+
+namespace cnums;
 
 public static partial class Maths
 {
@@ -59,5 +61,13 @@ public static partial class Maths
 
         return false;
     }
-    
+
+    internal static bool CrossedDomains(Domain domain1, Domain domain2)
+    {
+        if ((domain1.Begin >= domain2.Begin && domain1.Begin <= domain2.End) ||
+       (domain2.Begin >= domain1.Begin && domain2.Begin <= domain1.End))
+            return true;
+        return false;
+    }
+
 }

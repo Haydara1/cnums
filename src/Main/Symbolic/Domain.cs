@@ -1,6 +1,6 @@
 ﻿using static cnums.Statistics;
 
-namespace cnums
+namespace cnums.Symbolic
 {
     public class Domain
     {
@@ -105,7 +105,7 @@ namespace cnums
         {
             for (int i = 0; i < exceptionDomains.Count - 1; i++)
             {
-                if (PrivateFunctions.CrossedDomains(exceptionDomains[i], exceptionDomains[i + 1]))
+                if (Maths.CrossedDomains(exceptionDomains[i], exceptionDomains[i + 1]))
                 {
                     exceptionDomains[i] = Maths.UniteCrossedDomains(exceptionDomains[i], exceptionDomains[i + 1]);
                     exceptionDomains.RemoveAt(i + 1);
