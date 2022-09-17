@@ -1,4 +1,5 @@
 ﻿using cnums;
+using cnums.Symbolic;
 
 Symbol x = new('x');
 

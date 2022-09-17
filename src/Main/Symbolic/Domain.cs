@@ -1,4 +1,5 @@
 ﻿using static cnums.Statistics;
+using static cnums.PrivateFunctions;
 
 namespace cnums.Symbolic
 {
@@ -105,9 +106,9 @@ namespace cnums.Symbolic
         {
             for (int i = 0; i < exceptionDomains.Count - 1; i++)
             {
-                if (Maths.CrossedDomains(exceptionDomains[i], exceptionDomains[i + 1]))
+                if (CrossedDomains(exceptionDomains[i], exceptionDomains[i + 1]))
                 {
-                    exceptionDomains[i] = Maths.UniteCrossedDomains(exceptionDomains[i], exceptionDomains[i + 1]);
+                    exceptionDomains[i] = UniteCrossedDomains(exceptionDomains[i], exceptionDomains[i + 1]);
                     exceptionDomains.RemoveAt(i + 1);
 
                     i = -1;
@@ -123,7 +124,7 @@ namespace cnums.Symbolic
             {
                 foreach(Domain domain in ExceptionDomains)
                 {
-                    if (Maths.DomainContainsValue(domain, exceptionValues[i]))
+                    if (DomainContainsValue(domain, exceptionValues[i]))
                     {
                         exceptionValues.RemoveAt(i);
                         i--;
@@ -158,10 +159,10 @@ namespace cnums.Symbolic
         }
 
         public bool ContainsValue(double value)
-            => Maths.DomainContainsValue(this, value);
+            => DomainContainsValue(this, value);
 
         public bool ContainsDomain(Domain domain)
-            => Maths.DomainContainsDomain(this, domain);
+            => DomainContainsDomain(this, domain);
 
         public override string ToString()
         {
