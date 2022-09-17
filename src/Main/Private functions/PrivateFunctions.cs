@@ -1,4 +1,6 @@
-﻿namespace cnums
+﻿using cnums.Symbolic;
+
+namespace cnums
 {
     internal static partial class PrivateFunctions
     {
@@ -88,14 +90,6 @@
 
         internal static bool IsInteger(double number)
             => number % 1 == 0;
-
-        internal static bool CrossedDomains(Domain domain1, Domain domain2)
-        {
-            if ((domain1.Begin >= domain2.Begin && domain1.Begin <= domain2.End) ||
-           (domain2.Begin >= domain1.Begin && domain2.Begin <= domain1.End)) 
-                return true;
-            return false;
-        }
 
         internal static double AngleShift(double alpha, double beta)
         {

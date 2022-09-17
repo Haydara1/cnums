@@ -1,4 +1,6 @@
-﻿namespace cnums;
+﻿using cnums.Symbolic;
+
+namespace cnums;
 
 internal static partial class PrivateFunctions
 {
@@ -44,7 +46,7 @@ internal static partial class PrivateFunctions
     internal static bool ContainsSymbols(this Polynomial polynomial)
     {
         foreach(object obj in polynomial.Container)
-            if (obj.GetType() == typeof(cnums.Symbol))
+            if (obj.GetType() == typeof(Symbol))
                 return true;
         return false;
     }
