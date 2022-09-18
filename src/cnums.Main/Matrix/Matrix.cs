@@ -1,4 +1,6 @@
-﻿namespace cnums;
+﻿//Pulled from https://en.wikipedia.org/wiki/Matrix_(mathematics)
+
+namespace cnums;
 
 public struct Matrix
 {
@@ -67,8 +69,26 @@ public struct Matrix
     }
 
     public static Matrix operator *(Matrix matrix, double scalar)
-        => scalar * matrix
+        => scalar * matrix;
 
+    public static Matrix operator *(Matrix left, Matrix right)
+    {
+        if (left.Columns != right.Rows)
+            throw new ArgumentException("Left matrix should have the same number of columns as the number of rows of the right matrix.");
 
+        double[,] result = new double[left.Rows, right.Columns];
+
+        for(int i = 0; i < left.Rows; i++)
+            for(int j = 0; j < right.Columns; j++)
+            {
+                double sum = 0;
+                for(int k = 0; k < left.Columns; k++)
+                    sum += left.matrix[i, k] * right.matrix[k, j];
+
+                result[i, j] = sum;
+            }
+
+        return new(result);
+    }
 }
 
