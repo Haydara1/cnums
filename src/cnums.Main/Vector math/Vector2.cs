@@ -1,7 +1,11 @@
-﻿namespace cnums.Vector_math;
+﻿using static cnums.Maths;
+
+namespace cnums.Vector_math;
 
 public struct Vector2
 {
+    public static readonly Vector2 ZERO = new(0, 0);
+
     private double x;
     private double y;
 
@@ -47,6 +51,16 @@ public struct Vector2
     {
         throw new NotImplementedException();
     }
+
+    public static double Angle(Vector2 vec1, Vector2 vec2)
+        => Acos(Dot(vec1, vec2) / (Magnitude(vec1) * Magnitude(vec2)));
+
+    public static double Magnitude(Vector2 vector)
+        => Sqrt(Power(vector.x) + Power(vector.y));
+
+    public static double Dot(Vector2 vec1, Vector2 vec2)
+        => vec1.x * vec2.x 
+         + vec1.y * vec2.y;
 
     public static Vector2 operator +(Vector2 vec1, Vector2 vec2)
         => new(vec1.x + vec2.x, vec1.y + vec2.y);

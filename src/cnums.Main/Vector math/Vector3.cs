@@ -1,4 +1,6 @@
-﻿namespace cnums.Vector_math;
+﻿using static cnums.Maths;
+
+namespace cnums.Vector_math;
 
 public struct Vector3
 {
@@ -58,6 +60,9 @@ public struct Vector3
     {
         throw new NotImplementedException();
     }
+
+    public static double Magnitude(Vector3 vector)
+        => Sqrt(Power(vector.x) + Power(vector.y) + Sqrt(vector.z));
 
     public static Vector3 operator +(Vector3 vec1, Vector3 vec2)
         => new(vec1.x + vec2.x, 

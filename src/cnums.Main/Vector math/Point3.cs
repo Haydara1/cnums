@@ -1,4 +1,6 @@
-﻿namespace cnums.Vector_math;
+﻿using static cnums.Maths;
+
+namespace cnums.Vector_math;
 
 public struct Point3
 {
@@ -41,6 +43,9 @@ public struct Point3
             && this.y == other.y
             && this.z == other.z;
     }
+
+    public static double Magnitude(Point3 point)
+        => Sqrt(Power(point.x) + Power(point.y) + Power(point.z));
 
     public static bool operator ==(Point3 left, Point3 right)
         => left.Equals(right);

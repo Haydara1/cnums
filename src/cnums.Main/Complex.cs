@@ -6,13 +6,13 @@ namespace cnums
     public struct Complex //a + ib
     {
         //Zero Complex
-        public static readonly Complex Zero = new Complex(0, 0);
+        public static readonly Complex Zero = new(0, 0);
 
         //One Complex
-        public static readonly Complex One = new Complex(1, 0);
+        public static readonly Complex One = new(1, 0);
 
         //One Imaginary
-        public static readonly Complex ImaginaryOne = new Complex(0, 1);
+        public static readonly Complex ImaginaryOne = new(0, 1);
 
         private double Real; //Real part of the complex number. (a)
 

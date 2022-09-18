@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using static cnums.Maths;
 
 namespace cnums.Vector_math;
 
@@ -33,6 +33,9 @@ public struct Point2
         Point2 other = (Point2)obj;
         return this.x == other.x && this.y == other.y;
     }
+
+    public static double Magnitude(Point2 point)
+        => Sqrt(Power(point.x) + Power(point.y));
 
     public static bool operator ==(Point2 left, Point2 right)
         => left.Equals(right);
