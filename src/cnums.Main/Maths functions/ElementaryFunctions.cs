@@ -132,7 +132,7 @@ public static partial class Maths
     /// </summary>
     /// <param name="value">A cnums.Complex number.</param>
     /// <returns>
-    ///     A cnums.Complex number, the modulus of the given number.
+    ///     A double-precision floating-point, the modulus of the given number.
     /// </returns>
     public static double Abs(Complex c)
         => Sqrt(Power(c.Re) + Power(c.Im));
@@ -145,8 +145,8 @@ public static partial class Maths
     /// <summary>
     /// Returns the factorial value of the given number.
     /// </summary>
-    /// <param name="num">Number whose factorial value want to be found.</param>
-    /// <returns>Returns an double-precision floating-point number.</returns>
+    /// <param name="num">Number whose factorial value is to be found.</param>
+    /// <returns>Returns a double-precision floating-point number.</returns>
     public static double Factorial(double num)
     {
         double f;
@@ -163,7 +163,7 @@ public static partial class Maths
     /// <summary>
     /// Returns the factorial value of the given number.
     /// </summary>
-    /// <param name="num">Number whose factorial value want to be found.</param>
+    /// <param name="num">Number whose factorial value is to be found.</param>
     /// <returns>Returns an single-precision floating-point number.</returns>
     public static float Factorial(float num)
     {
@@ -181,7 +181,7 @@ public static partial class Maths
     /// <summary>
     /// Returns the factorial value of the given number.
     /// </summary>
-    /// <param name="num">Number whose factorial value want to be found.</param>
+    /// <param name="num">Number whose factorial value is to be found.</param>
     /// <returns>Returns an Int32 number.</returns>
     public static int Factorial(int num)
     {
@@ -199,7 +199,7 @@ public static partial class Maths
     /// <summary>
     /// Returns the factorial value of the given number.
     /// </summary>
-    /// <param name="num">Number whose factorial value want to be found.</param>
+    /// <param name="num">Number whose factorial value is to be found.</param>
     /// <returns>Returns an Int64 number.</returns>
     public static long Factorial(long num)
     {
@@ -217,7 +217,7 @@ public static partial class Maths
     /// <summary>
     /// Returns the factorial value of the given number.
     /// </summary>
-    /// <param name="num">Number whose factorial value want to be found.</param>
+    /// <param name="num">Number whose factorial value is to be found.</param>
     /// <returns>Returns an Int16 number.</returns>
     public static short Factorial(short num)
     {
@@ -250,6 +250,11 @@ public static partial class Maths
         return f;
     }
 
+    /// <summary>
+    /// Returns the factorial value of the given number.
+    /// </summary>
+    /// <param name="num">Number whose factorial value is to be found.</param>
+    /// <returns>Returns a BigInteger.</returns>
     public static BigInteger Factorial(BigInteger num)
     {
         BigInteger f;
@@ -270,7 +275,7 @@ public static partial class Maths
     /// <summary>
     /// Returns the cubic root of the given number.
     /// </summary>
-    /// <param name="num">The number whose cubic root want to be found.</param>
+    /// <param name="num">The number whose cubic root is to be found.</param>
     /// <returns>Returns a double-precision floating-point number, representing the cubic root of the given number.
     /// Returns System.Double.NaN if num equals System.Double.Nan.</returns>
     public static double Cbrt(double num)
@@ -345,7 +350,7 @@ public static partial class Maths
     /// <summary>
     /// Returns the square root of the given number.
     /// </summary>
-    /// <param name="num">The number whose square root want to be found.</param>
+    /// <param name="num">The number whose square root is to be found.</param>
     /// <returns>Returns a double-precision floating-point number, representing the square root of the given number.
     /// Returns System.Double.NaN if num equals System.Double.Nan or is smaller than zero.</returns>
     public static double Sqrt(double num)
@@ -374,7 +379,7 @@ public static partial class Maths
     /// <summary>
     /// Returns the square root of the given complex number.
     /// </summary>
-    /// <param name="num">The number whose square root want to be found.</param>
+    /// <param name="num">The number whose square root is to be found.</param>
     /// <returns>Returns a cnums.Complex number, representing the square root of the given number.</returns>
     public static Complex Sqrt(Complex complex)
     {
@@ -429,6 +434,12 @@ public static partial class Maths
         => (a * b) / GCD(a, b);
 
     //precise
+    /// <summary>
+    /// Returns the prime factors of the given number.
+    /// </summary>
+    /// <param name="num">The number whose primes factors is to be found.</param>
+    /// <param name="DistinctFactors">If True, returns an array with only distinct prime factors, otherwise, multiple prime factors may be repeated.</param>
+    /// <returns>An integer array, containing the prime factors of the given number.</returns>
     public static int[] Factorize(int num, bool DistinctFactors = false)
     {
         int divisor = 2;
@@ -467,6 +478,11 @@ public static partial class Maths
     }
 
     //precise
+    /// <summary>
+    /// Checks if the given integer is prime.
+    /// </summary>
+    /// <param name="num">An integer number.</param>
+    /// <returns>Returns True if num is prime, otherwise, returns False.</returns>
     public static bool isPrime(int num)
     {
         int index = 2;
@@ -484,7 +500,7 @@ public static partial class Maths
     /// <summary>
     /// Returns 1 or -1, depending on the given number.
     /// </summary>
-    /// <param name="num">Double-precision floating-number whose sign want to be found.</param>
+    /// <param name="num">Double-precision floating-number whose sign is to be found.</param>
     /// <returns>Returns 1 if num > 0, retunr -1 if num < 0.</returns>
     public static int Sign(double num)
         => (int)(num / Abs(num));
