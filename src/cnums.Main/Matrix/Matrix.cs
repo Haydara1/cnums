@@ -6,7 +6,7 @@ public struct Matrix
 {
     private int cols;
     private int rows;
-    public readonly double[,] matrix;
+    internal double[,] matrix;
 
     public int Columns
     {
@@ -27,6 +27,19 @@ public struct Matrix
         this.matrix = matrix;
     }
 
+    public static Matrix Eye(int number)
+    {
+        double[,] result = new double[number, number];
+
+        for (int i = 0; i < number; i++)
+            result[i, i] = 1d;
+
+        return new(result);
+    }
+
+    public static Matrix Zeros(int rows, int cols)
+        => new(new double[rows, cols]);
+
     public static Matrix Transpose(Matrix matrix)
     {
         double[,] result = new double[matrix.Columns, matrix.Rows];
@@ -36,6 +49,23 @@ public struct Matrix
                 result[j, i] = matrix.matrix[i, j];
 
         return new(result);
+    }
+
+    public override string ToString()
+    {
+        string str = "";
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                str += matrix[i, j].ToString() + " ";
+            }
+
+            str += "\n";
+        }
+
+        return str;
     }
 
     public static Matrix operator +(Matrix matrix)
