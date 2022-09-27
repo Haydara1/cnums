@@ -7,7 +7,7 @@ public class SSqrt
     public object? Radicand
     {
         get { return radicand; }
-        set { radicand = value; }   
+        set { radicand = value; }
     }
 
     public SSqrt(Symbol symbol) => radicand = symbol;
@@ -16,5 +16,5 @@ public class SSqrt
 
 
 
-    
+
 }

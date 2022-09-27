@@ -13,7 +13,7 @@ public static partial class Maths
     public static Fraction Power(Fraction fraction, double power)
         => new(Power(fraction.Numerator, power), Power(fraction.Denominator, power));
 
-    public static Fraction Sqrt(Fraction fraction) 
+    public static Fraction Sqrt(Fraction fraction)
         => new(Sqrt(fraction.Numerator), Sqrt(fraction.Denominator));
 
     public static Fraction Cbrt(Fraction fraction)
