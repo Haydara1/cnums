@@ -1,5 +1,5 @@
-﻿using static cnums.Statistics;
-using static cnums.PrivateFunctions;
+﻿using static cnums.PrivateFunctions;
+using static cnums.Statistics;
 
 namespace cnums.Symbolic
 {
@@ -33,8 +33,8 @@ namespace cnums.Symbolic
 
         public List<double> ExceptionValues
         {
-            get { return exceptionValues; } 
-            private set { exceptionValues = value; }    
+            get { return exceptionValues; }
+            private set { exceptionValues = value; }
         }
 
         private bool openBeginning = true;
@@ -42,7 +42,7 @@ namespace cnums.Symbolic
         public bool OpenBeginning
         {
             get { return openBeginning; }
-            private set {  openBeginning = value; }
+            private set { openBeginning = value; }
         }
 
         private bool openEnd = true;
@@ -53,7 +53,7 @@ namespace cnums.Symbolic
             private set { openEnd = value; }
         }
 
-        public Domain() {}
+        public Domain() { }
 
         public Domain(double beginning, double end)
         {
@@ -87,7 +87,7 @@ namespace cnums.Symbolic
 
         public void AddExceptionValues(double value)
         {
-            if (double.IsInfinity(value) || double.IsNaN(value)) 
+            if (double.IsInfinity(value) || double.IsNaN(value))
                 throw new Exception("Can't except infinity, or double.NaN.");
 
             exceptionValues.Add(value);
@@ -96,7 +96,7 @@ namespace cnums.Symbolic
 
         public void AddExceptionValues(double[] values)
         {
-            foreach(double value in values)
+            foreach (double value in values)
                 exceptionValues.Add(value);
 
             SimplifyExceptionValues();
@@ -120,9 +120,9 @@ namespace cnums.Symbolic
         {
             exceptionValues = exceptionValues.Distinct().ToList();
 
-            for(int i = 0; i < exceptionValues.Count; i++)
+            for (int i = 0; i < exceptionValues.Count; i++)
             {
-                foreach(Domain domain in ExceptionDomains)
+                foreach (Domain domain in ExceptionDomains)
                 {
                     if (DomainContainsValue(domain, exceptionValues[i]))
                     {
@@ -130,7 +130,7 @@ namespace cnums.Symbolic
                         i--;
                         break;
                     }
-                    else if(domain.Begin == exceptionValues[i] && domain.openBeginning)
+                    else if (domain.Begin == exceptionValues[i] && domain.openBeginning)
                     {
                         domain.openBeginning = false;
                         exceptionValues.RemoveAt(i);
@@ -174,13 +174,13 @@ namespace cnums.Symbolic
                 if (openBeginning) domain += $"({this.Begin},";
                 else domain += $"[{this.Begin},";
             }
-            
-            foreach(Domain dm in ExceptionDomains)
+
+            foreach (Domain dm in ExceptionDomains)
             {
                 if (dm.openBeginning) domain += $" {dm.Begin}] U ";
                 else domain += $" {dm.Begin}) U ";
 
-                if(dm.openEnd) domain += $"[{dm.End},";
+                if (dm.openEnd) domain += $"[{dm.End},";
                 else domain += $"({dm.End},";
             }
 
@@ -199,7 +199,7 @@ namespace cnums.Symbolic
             exceptionVals = exceptionVals[..^2];
             exceptionVals += "}";
 
-            if(ExceptionValues.Count == 0) 
+            if (ExceptionValues.Count == 0)
                 return domain;
 
             return domain + exceptionVals;
