@@ -53,8 +53,6 @@ public static partial class Maths
         return PrivateFunctions.LogTen(num) / PrivateFunctions.LogTen(2);
     }
 
-    public static Complex Ln(Complex num)
-        => new(Ln(num.Modulus()), num.Arg());
 
     #endregion
 
@@ -157,4 +155,3 @@ public static partial class Maths
     #endregion
 
 }
-    

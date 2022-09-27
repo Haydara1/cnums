@@ -185,7 +185,7 @@ public static partial class Maths
         double x1 = 1, y1 = num;
         double signFactor;
 
-        if(x1 < 0 && y1 < 0)
+        if (x1 < 0 && y1 < 0)
         {
             x1 *= -1;
             y1 *= -1;
@@ -209,7 +209,7 @@ public static partial class Maths
 
         double sigma, angle = 0;
 
-        for(int i = 0; i < 100; i++)
+        for (int i = 0; i < 100; i++)
         {
             if (y1 <= 0.0)
                 sigma = +1.0;
@@ -271,7 +271,7 @@ public static partial class Maths
 
         double sigma;
 
-        for(int i = 0; i < 100; i++)
+        for (int i = 0; i < 100; i++)
         {
             if (theta < 0.0)
                 sigma = -1.0;
@@ -300,46 +300,8 @@ public static partial class Maths
         v[0, 0] *= KProd * SignFactor;
         v[0, 1] *= KProd * SignFactor;
 
-        
+
         return (v[0, 0], v[0, 1]);
     }
-
-    #region Trigonometric functions for Complex numbers
-
-    public static Complex Sin(Complex c)
-        => new(Sin(c.Re) * Cosh(c.Im), Cos(c.Re) * Sinh(c.Im));
-
-    public static Complex Cos(Complex c)
-        => new(Cos(c.Re) * Cosh(c.Im), -Sin(c.Re) * Sinh(c.Im));
-
-    public static Complex Tan(Complex c)
-        => Sin(c) / Cos(c);
-
-    public static Complex Cot(Complex c)
-        => Cos(c) / Sin(c);
-
-    public static Complex Sec(Complex c)
-        => 1 / Cos(c);
-
-    public static Complex Csc(Complex c)
-        => 1 / Sin(c);
-
-    #endregion
-
-    #region Inverse trigonometric functions for Complex numbers
-
-    public static Complex Asin(Complex c)
-        => (1 / j) * Ln(j * c + Sqrt(-(c * c) + 1));
-
-    public static Complex Acos(Complex c)
-        => (1 / j) * Ln(c + j * Sqrt(-(c * c) + 1));
-
-    public static Complex Atan(Complex c)
-        => (1 / (j * 2)) * Ln((j - c) / (j + c));
-
-    public static Complex Acot(Complex c)
-        => Atan(1 / c);
-
-    #endregion
 }
 

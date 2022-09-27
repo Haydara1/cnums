@@ -127,15 +127,7 @@ public static partial class Maths
         return value;
     }
 
-    /// <summary>
-    ///     Returns the absolute value of a complex number.
-    /// </summary>
-    /// <param name="value">A cnums.Complex number.</param>
-    /// <returns>
-    ///     A double-precision floating-point, the modulus of the given number.
-    /// </returns>
-    public static double Abs(Complex c)
-        => Sqrt(Power(c.Re) + Power(c.Im));
+
 
     #endregion
 
@@ -373,23 +365,6 @@ public static partial class Maths
         } while (Abs((double)sum - u) > 10E-15);
 
         return sum;
-    }
-
-    //precise
-    /// <summary>
-    /// Returns the square root of the given complex number.
-    /// </summary>
-    /// <param name="num">The number whose square root is to be found.</param>
-    /// <returns>Returns a cnums.Complex number, representing the square root of the given number.</returns>
-    public static Complex Sqrt(Complex complex)
-    {
-        double real, immaginary;
-
-        real = Sqrt((complex.Modulus() + complex.Re) / 2);
-        immaginary = complex.Im / Abs(complex.Im);
-        immaginary *= Sqrt((complex.Modulus() - complex.Re) / 2);
-
-        return new(real, immaginary);
     }
 
     //precise
