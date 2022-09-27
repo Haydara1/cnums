@@ -1,6 +1,4 @@
-﻿using cnums.Symbolic;
-
-namespace cnums
+﻿namespace cnums
 {
     internal static partial class PrivateFunctions
     {
@@ -115,7 +113,7 @@ namespace cnums
 
             if (cA != rB)
                 throw new Exception("Incompatible matrices.");
-            
+
             for (int i = 0; i < rA; i++)
             {
                 for (int j = 0; j < cB; j++)
@@ -123,7 +121,7 @@ namespace cnums
                     temp = 0;
                     for (int k = 0; k < cA; k++)
                         temp += arr1[i, k] * arr2[k, j];
-                        
+
                     result[i, j] = temp;
                 }
             }
