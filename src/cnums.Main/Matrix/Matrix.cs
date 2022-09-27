@@ -40,6 +40,26 @@ public struct Matrix
     public static Matrix Zeros(int rows, int cols)
         => new(new double[rows, cols]);
 
+    public static Matrix Ones(int rows, int cols)
+    {
+        double[,] doubles = new double[rows, cols];
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                doubles[i, j] = 1d;
+
+        return new(doubles);
+    }
+
+    public static Matrix ValueInit(int rows, int cols, double value)
+    {
+        double[,] doubles = new double[rows, cols];
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < cols; j++)
+                doubles[i, j] = value;
+
+        return new(doubles);
+    }
+
     public static Matrix Transpose(Matrix matrix)
     {
         double[,] result = new double[matrix.Columns, matrix.Rows];
@@ -91,8 +111,8 @@ public struct Matrix
 
     public static Matrix operator *(double scalar, Matrix matrix)
     {
-        for(int i = 0; i < matrix.Rows; i++)
-            for(int j = 0; j < matrix.Columns; j++)
+        for (int i = 0; i < matrix.Rows; i++)
+            for (int j = 0; j < matrix.Columns; j++)
                 matrix.matrix[i, j] *= scalar;
 
         return matrix;
@@ -108,11 +128,11 @@ public struct Matrix
 
         double[,] result = new double[left.Rows, right.Columns];
 
-        for(int i = 0; i < left.Rows; i++)
-            for(int j = 0; j < right.Columns; j++)
+        for (int i = 0; i < left.Rows; i++)
+            for (int j = 0; j < right.Columns; j++)
             {
                 double sum = 0;
-                for(int k = 0; k < left.Columns; k++)
+                for (int k = 0; k < left.Columns; k++)
                     sum += left.matrix[i, k] * right.matrix[k, j];
 
                 result[i, j] = sum;
