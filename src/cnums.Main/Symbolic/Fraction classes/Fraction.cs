@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using static cnums.Maths;
+﻿using static cnums.Maths;
 
 namespace cnums;
 
@@ -22,7 +21,7 @@ public class Fraction
     }
 
     public Fraction(double number)
-    {       
+    {
     }
 
     public Fraction(double numerator, double denominator)
@@ -30,12 +29,12 @@ public class Fraction
         if (denominator == 0) throw new DivideByZeroException("Cannot divide by zero.");
 
         this.numerator = Abs(numerator) * (Sign(numerator) * Sign(denominator));
-        this.denominator = Abs(denominator); 
+        this.denominator = Abs(denominator);
     }
 
     static public Fraction Reduce(Fraction fraction)
     {
-        if(PrivateFunctions.IsInteger(fraction.Numerator) && PrivateFunctions.IsInteger(fraction.Denominator))
+        if (PrivateFunctions.IsInteger(fraction.Numerator) && PrivateFunctions.IsInteger(fraction.Denominator))
         {
             int a = Convert.ToInt32(fraction.Numerator);
             int b = Convert.ToInt32(fraction.Denominator);
@@ -49,15 +48,15 @@ public class Fraction
 
     public override bool Equals(object? obj)
     {
-        if(obj == null) 
+        if (obj == null)
             return false;
 
-        if (obj.GetType() != this.GetType()) 
+        if (obj.GetType() != this.GetType())
             return false;
 
         Fraction fraction = (Fraction)obj;
-        if (this.Numerator * fraction.Denominator 
-            == this.Denominator * fraction.Numerator) 
+        if (this.Numerator * fraction.Denominator
+            == this.Denominator * fraction.Numerator)
             return true;
 
         return false;
@@ -73,7 +72,7 @@ public class Fraction
 
     public static Fraction operator +(Fraction fraction)
         => Reduce(fraction);
-    
+
     public static Fraction operator +(Fraction fraction, double number)
     {
         Fraction frc = new(number, 1);
@@ -85,7 +84,7 @@ public class Fraction
 
     public static Fraction operator +(Fraction fraction1, Fraction fraction2)
     {
-        if(fraction1.Denominator != fraction2.Denominator)
+        if (fraction1.Denominator != fraction2.Denominator)
         {
             fraction1.Numerator *= fraction2.Denominator;
             fraction2.Numerator *= fraction1.Denominator;
@@ -125,7 +124,7 @@ public class Fraction
 
     #region Multiplication
 
-    public static Fraction operator *(Fraction fraction1, Fraction fraction2) 
+    public static Fraction operator *(Fraction fraction1, Fraction fraction2)
         => new(fraction1.Numerator * fraction2.Numerator, fraction1.Denominator * fraction2.Denominator);
 
     public static Fraction operator *(Fraction fraction, double number)
@@ -138,7 +137,7 @@ public class Fraction
 
     #region Division
 
-    public static Fraction operator /(Fraction fraction1, Fraction fraction2) 
+    public static Fraction operator /(Fraction fraction1, Fraction fraction2)
         => fraction1 * new Fraction(fraction2.Denominator, fraction2.Numerator);
 
     public static Fraction operator /(Fraction fraction, double number)

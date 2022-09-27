@@ -9,7 +9,7 @@ internal class ObjectFraction : Fraction
         get { return numerator; }
         set { numerator = value; }
     }
-    
+
     private object? denominator;
 
     public new object? Denominator
