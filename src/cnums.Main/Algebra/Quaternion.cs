@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Numerics;
+﻿// Pulled from https://en.wikipedia.org/wiki/Quaternion
 
 namespace cnums.Algebra;
 
@@ -10,7 +9,7 @@ public struct Quaternion
     private readonly double c;
     private readonly double d;
 
-    public double A => a;   
+    public double A => a;
     public double B => b;
     public double C => c;
     public double D => d;
