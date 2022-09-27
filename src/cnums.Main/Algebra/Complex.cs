@@ -1,7 +1,7 @@
 ﻿using static cnums.Consts;
 using static cnums.Maths;
 
-namespace cnums
+namespace cnums.Algebra
 {
     public struct Complex //a + ib
     {
@@ -37,18 +37,18 @@ namespace cnums
         }
 
         public Complex(uint Modulus = 0, double Theta = 0) //Constuctor, given parameters in polar form.
-        {   
+        {
             Real = Modulus * Cos(Theta); // a = r * cos(theta)
             Imaginary = Modulus * Sin(Theta); //b = r * sin(theta)
         }
 
         public double Modulus() // The same as taking the absolute value of a complex number
-            => Abs(new Complex(Real, Imaginary)); 
+            => Algebra.Abs(new Complex(Real, Imaginary));
 
         public double Arg()
         {
             // Getting magnitude
-            double magnitude = Abs(new Complex(Real, Imaginary)); 
+            double magnitude = Algebra.Abs(new Complex(Real, Imaginary));
 
             double theta = Asin(Abs(Imaginary) / magnitude); // Sin(theta) = b / r
 
@@ -89,9 +89,9 @@ namespace cnums
         public override bool Equals(object? obj)
         {
             if (obj == null) return false;
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
             Complex complex = (Complex)obj;
-            return (this.Im == complex.Im && this.Re == complex.Re);
+            return Im == complex.Im && Re == complex.Re;
         }
 
         public override int GetHashCode()
@@ -100,7 +100,7 @@ namespace cnums
         }
 
         public bool isConjugate(Complex c1)
-            => (this.Re == c1.Re && this.Im == -c1.Im);
+            => Re == c1.Re && Im == -c1.Im;
 
         #region Addition.
         public static Complex operator +(Complex c1)
@@ -221,7 +221,7 @@ namespace cnums
             => new(c1.Re / n, c1.Im / n);
 
         public static Complex operator /(double n, Complex c)
-            => (c.Conjugate() * n) / (Power(c.Modulus(), 2));
+            => c.Conjugate() * n / Power(c.Modulus(), 2);
 
         #endregion
 
