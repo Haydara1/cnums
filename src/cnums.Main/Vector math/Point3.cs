@@ -39,7 +39,7 @@ public struct Point3
         if (obj.GetType() != typeof(Point3)) return false;
 
         Point3 other = (Point3)obj;
-        return this.x == other.x 
+        return this.x == other.x
             && this.y == other.y
             && this.z == other.z;
     }

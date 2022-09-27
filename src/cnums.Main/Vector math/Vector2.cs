@@ -35,8 +35,8 @@ public struct Vector2
 
     public override bool Equals(object? obj)
     {
-        if(obj == null) return false;
-        if(obj.GetType() != typeof(Vector2)) return false;
+        if (obj == null) return false;
+        if (obj.GetType() != typeof(Vector2)) return false;
         Vector2 other = (Vector2)obj;
         return x == other.x && y == other.y;
     }
@@ -59,7 +59,7 @@ public struct Vector2
         => Sqrt(Power(vector.x) + Power(vector.y));
 
     public static double Dot(Vector2 vec1, Vector2 vec2)
-        => vec1.x * vec2.x 
+        => vec1.x * vec2.x
          + vec1.y * vec2.y;
 
     public static Vector2 operator +(Vector2 vec1, Vector2 vec2)

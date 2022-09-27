@@ -27,8 +27,8 @@ public struct Point2
 
     public override bool Equals(object? obj)
     {
-        if(obj == null) return false;
-        if(obj.GetType() != typeof(Point2)) return false;
+        if (obj == null) return false;
+        if (obj.GetType() != typeof(Point2)) return false;
 
         Point2 other = (Point2)obj;
         return this.x == other.x && this.y == other.y;

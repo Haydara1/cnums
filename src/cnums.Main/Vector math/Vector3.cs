@@ -13,7 +13,7 @@ public struct Vector3
         get { return x; }
         private set { x = value; }
     }
-        
+
     public double Y
     {
         get { return y; }
@@ -42,18 +42,18 @@ public struct Vector3
 
     public override bool Equals(object? obj)
     {
-        if(obj == null) return false;
-        if(obj.GetType() != typeof(Vector3)) return false;
+        if (obj == null) return false;
+        if (obj.GetType() != typeof(Vector3)) return false;
         Vector3 other = (Vector3)obj;
-        return x == other.x 
+        return x == other.x
             && y == other.y
             && z == other.z;
     }
 
-    public static bool operator ==(Vector3 left, Vector3 right) 
+    public static bool operator ==(Vector3 left, Vector3 right)
         => left.Equals(right);
 
-    public static bool operator !=(Vector3 left, Vector3 right) 
+    public static bool operator !=(Vector3 left, Vector3 right)
         => !(left == right);
 
     public override int GetHashCode()
@@ -65,7 +65,7 @@ public struct Vector3
         => Sqrt(Power(vector.x) + Power(vector.y) + Sqrt(vector.z));
 
     public static Vector3 operator +(Vector3 vec1, Vector3 vec2)
-        => new(vec1.x + vec2.x, 
+        => new(vec1.x + vec2.x,
                vec1.y + vec2.y,
                vec1.z + vec2.z);
 
