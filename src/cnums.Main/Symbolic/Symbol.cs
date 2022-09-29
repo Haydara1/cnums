@@ -23,12 +23,10 @@
 
         public override bool Equals(object? obj)
         {
-            if (obj == null)
+            if (obj == null 
+                || obj.GetType() != this.GetType())
                 return false;
-
-            if (obj.GetType() != this.GetType())
-                return false;
-
+            
             Symbol symbol = (Symbol)obj;
             if (symbol.sym == this.sym)
                 return true;
@@ -58,7 +56,7 @@
             object addition = new SymbolContainer(symbol1) + new SymbolContainer(symbol2); 
 
             if(addition.GetType() == typeof(cnums.SymbolContainer))
-                return new(new List<SymbolContainer>() { new SymbolContainer(symbol1), new SymbolContainer(symbol2) });
+                return new(new List<SymbolContainer>() { (SymbolContainer) addition });
 
             return new((Polynomial)addition, true);
         }
@@ -88,41 +86,7 @@
 
         #endregion
 
-        //#region Multiplication
-
-        //public static Polynomial operator *(Symbol symbol, double number)
-        //    => new(new List<object> { number, '*', symbol });
-
-        //public static Polynomial operator *(double number, Symbol symbol)
-        //    => new(new List<object> { number, '*', symbol });
-
-        //public static Polynomial operator *(Symbol symbol1, Symbol symbol2)
-        //{
-        //    if (symbol1 == symbol2)
-        //        return new(new List<object> { symbol1, '^', 2 });
-
-        //    return new(new List<object> { symbol1, '*', symbol2 });
-        //}
-
-        //#endregion
-
-        //#region Division
-
-        //public static Polynomial operator /(Symbol symbol, double number)
-        //    => new(new List<object> { symbol, '/', number });
-
-        //public static Polynomial operator /(double number, Symbol symbol)
-        //    => new(new List<object> { number, '/', symbol });
-
-        //public static Polynomial operator /(Symbol symbol1, Symbol symbol2)
-        //{
-        //    if (symbol1 == symbol2)
-        //        return new Polynomial(new List<object> { 1d });
-
-        //    return new(new List<object> { symbol1, '/', symbol2 });
-        //}
-
-        //#endregion
+        
 
         #region Comparision
 
