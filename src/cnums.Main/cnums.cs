@@ -36,6 +36,8 @@ public static class Consts
     /// </summary>
     public static readonly Algebra.Complex j = new(0, 1);
 
+    internal static readonly SymbolContainer Zero = new(0);
+
     //Used for Cordic algorithm.
     //Table of consts representing Atan( (1/2)^(0:59) )
     internal static double[] Angles = {
