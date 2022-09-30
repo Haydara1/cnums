@@ -1,5 +1,73 @@
 ﻿namespace cnums;
 
+public static class Utils
+{
+    internal static bool Unicode = false;
+
+    public static void InitPrinting(bool useUnicode = true)
+    {
+        Unicode = useUnicode;
+
+        if (useUnicode)
+            Console.OutputEncoding = System.Text.Encoding.Unicode;
+        else
+            Console.OutputEncoding = System.Text.Encoding.Default;
+    }
+
+    internal static string UnicodeExponent(this double number)
+    {
+        string result = "";
+
+        string num = number.ToString();
+
+        foreach(char c in num)
+            switch (c)
+            {
+                case '0':
+                    result += "\u2070";
+                    break;
+
+                case '1':
+                    result += "\u00B9";
+                    break;
+
+                case '2':
+                    result += "\u00B2";
+                    break;
+
+                case '3':
+                    result += "\u00B3";
+                    break;
+
+                case '4':
+                    result += "\u2074";
+                    break;
+
+                case '5':
+                    result += "\u2075";
+                    break;
+
+                case '6':
+                    result += "\u2076";
+                    break;
+
+                case '7':
+                    result += "\u2077";
+                    break;
+
+                case '8':
+                    result += "\u2078";
+                    break;
+
+                case '9':
+                    result += "\u2079";
+                    break;
+            }
+
+        return result;
+    }
+}
+
 /// <summary>
 ///     Provides a list of most used mathematics constants.
 /// </summary>
