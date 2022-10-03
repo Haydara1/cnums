@@ -75,6 +75,9 @@ public struct Matrix
     {
         string str = "";
 
+        if (Utils.Unicode)
+            return ToUnicodeString();
+
         for (int i = 0; i < rows; i++)
         {
             for (int j = 0; j < cols; j++)
@@ -84,6 +87,52 @@ public struct Matrix
 
             str += "\n";
         }
+
+        return str;
+    }
+
+    private string ToUnicodeString()
+    {
+        string str = "";
+
+        if(rows == 1)
+        {
+            if (cols == 1)
+                return $"[ {matrix[0, 0]} ]";
+
+
+            str += "[ ";
+
+            for (int i = 0; i < cols; i++)
+                str += matrix[0, i].ToString() + " ";
+
+            str += "]";
+            return str;
+        }
+
+        str += "\u2308 ";
+
+        for(int i = 0; i < cols; i++)
+            str += matrix[0, i].ToString() + " ";
+
+        str += "\u2309\n";
+
+        for (int i = 1; i < rows - 1; i++)
+        {
+            str += "| ";
+
+            for (int j = 0; j < cols; j++)
+                str += matrix[i, j].ToString() + " ";
+
+            str += "|\n";
+        }
+
+        str += "\u230A ";
+
+        for (int i = 0; i < cols; i++)
+            str += matrix[rows - 1, i].ToString() + " ";
+
+        str += "\u230B";
 
         return str;
     }
