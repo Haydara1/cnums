@@ -2,13 +2,19 @@
 {
     public class Symbol
     {
-
         private char sym = 'x';
+        private string subscript = "";
 
         public char Sym
         {
             get { return sym; }
             private set { sym = value; }
+        }
+
+        public string Subscript
+        {
+            get { return subscript; }
+            private set { subscript = value; }
         }
 
         public Symbol(char symbol)
@@ -21,6 +27,19 @@
             this.Sym = symbol;
         }
 
+        public Symbol() { }
+        
+        public Symbol(char symbol, uint subscript)
+        {
+            if (Char.IsDigit(symbol)
+                || Char.IsPunctuation(symbol)
+                || Char.IsWhiteSpace(symbol))
+                throw new ArgumentException("Symbol cannot be a digit or a punctuation mark or a white space.");
+
+            this.Sym = symbol;
+            this.subscript = subscript.UnicodeSubscript();
+        }
+
         public override bool Equals(object? obj)
         {
             if (obj == null 
@@ -28,7 +47,8 @@
                 return false;
             
             Symbol symbol = (Symbol)obj;
-            if (symbol.sym == this.sym)
+            if (symbol.sym == this.sym
+                && symbol.subscript == this.subscript)
                 return true;
 
             return false;
@@ -38,7 +58,7 @@
             => (int)sym;
 
         public override string ToString()
-            => $"{this.Sym}";
+            => $"{this.Sym}{this.Subscript}";
 
         #region Addition.
 
