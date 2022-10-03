@@ -4,6 +4,20 @@ public static class Utils
 {
     internal static bool Unicode = false;
 
+    private static char[] digits = "0123456789".ToCharArray();
+    private static char[] UnicodeSubsctipts = new char[] { 
+        '\u2080', 
+        '\u2081', 
+        '\u2082',
+        '\u2083',
+        '\u2084',
+        '\u2085',
+        '\u2086',
+        '\u2087',
+        '\u2088',
+        '\u2089',
+    };
+
     public static void InitPrinting(bool useUnicode = true)
     {
         Unicode = useUnicode;
@@ -63,6 +77,18 @@ public static class Utils
                     result += "\u2079";
                     break;
             }
+
+        return result;
+    }
+
+    internal static string UnicodeSubscript(this uint number)
+    {
+        string result = "";
+
+        string num = number.ToString();
+
+        foreach(char c in num)
+            result += UnicodeSubsctipts[Array.IndexOf(digits, c)];
 
         return result;
     }
