@@ -53,7 +53,7 @@ namespace cnums.Symbolic
             private set { openEnd = value; }
         }
 
-        public Domain() { }
+        internal Domain() { }
 
         public Domain(double beginning, double end)
         {
