@@ -4,27 +4,21 @@ namespace cnums.Symbolic;
 
 public class Polynomial
 {
-    private List<SymbolContainer> container;
+    public List<SymbolContainer> container = new() { };
 
-    internal List<SymbolContainer> Container
-    {
-        get { return container; }
-        set { container = value; }
-    }
-
-    internal Polynomial(List<SymbolContainer> symbolContainers)
-        => container = symbolContainers;
+    public Polynomial(List<SymbolContainer> symbolContainers)
+        => this.container = symbolContainers;
 
     internal Polynomial(Polynomial polynomial, bool _)
-        => container = polynomial.Container;
+        => this.container = polynomial.container;
 
     public override string ToString()
     {
         string poly = "";
 
-        if (Container == null) return "0";
+        if (container == null) return "0";
 
-        foreach (SymbolContainer sym in Container)
+        foreach (SymbolContainer sym in container)
             poly += sym.ToString();
 
         return poly;
@@ -32,7 +26,7 @@ public class Polynomial
 
     private bool ContainsConstant()
     {
-        foreach (SymbolContainer symbolContainer in this.Container)
+        foreach (SymbolContainer symbolContainer in this.container)
             if (symbolContainer.isConstant())
                 return true;
 
@@ -41,16 +35,16 @@ public class Polynomial
 
     private int getConstantIndex()
     {
-        foreach (SymbolContainer symbolContainer in this.Container)
+        foreach (SymbolContainer symbolContainer in this.container)
             if (symbolContainer.isConstant())
-                return Container.IndexOf(symbolContainer);
+                return container.IndexOf(symbolContainer);
 
         return -1;
     }
 
     private bool ContainsSymbol(Symbol symbol)
     {
-        foreach (SymbolContainer symbolContainer in this.Container)
+        foreach (SymbolContainer symbolContainer in this.container)
             if (symbolContainer.symbol.Contains(symbol))
                 return true;
 
@@ -59,11 +53,11 @@ public class Polynomial
 
     private int FindTerm(Symbol symbol, double exponent)
     {
-        foreach (SymbolContainer symbolContainer in this.Container)
+        foreach (SymbolContainer symbolContainer in this.container)
             if (symbolContainer.symbol.Count is 1
                 && symbolContainer.symbol[0] == symbol
                 && symbolContainer.Exponent[0] == exponent)
-                return this.Container.IndexOf(symbolContainer);
+                return this.container.IndexOf(symbolContainer);
 
         return -1;
     }
@@ -75,10 +69,10 @@ public class Polynomial
 
     public static Polynomial operator +(Polynomial polynomial, double number)
     {
-        var container = polynomial.Container;
+        var container = polynomial.container;
         if (polynomial.ContainsConstant())
             container[polynomial.getConstantIndex()] = (SymbolContainer)
-                (polynomial.Container[polynomial.getConstantIndex()] + number);
+                (polynomial.container[polynomial.getConstantIndex()] + number);
         else
             container.Add(new SymbolContainer(number));
         
@@ -90,7 +84,7 @@ public class Polynomial
 
     public static Polynomial operator +(Polynomial polynomial, Symbol symbol)
     {
-        var container = polynomial.Container;
+        var container = polynomial.container;
         if (polynomial.ContainsSymbol(symbol))
             container[polynomial.FindTerm(symbol, 1)].Coefficient++;
         else
@@ -109,19 +103,22 @@ public class Polynomial
 
     public static Polynomial operator -(Polynomial polynomial)
     {
-        var container = polynomial.Container;
-        for (int i = 0; i < container.Count; i++)
-            container[i] = -container[i];
+        // Asked for a question in Stack Overflow: https://stackoverflow.com/questions/73918546/static-operator-function-in-c-sharp-affecting-the-given-arguments
 
-        return new(container);
+        Polynomial result = new(polynomial.container);
+
+        for (int i = 0; i < result.container.Count; i++)
+            result.container[i] = -result.container[i];
+
+        return result;
     }
 
     public static Polynomial operator -(Polynomial polynomial, double number)
     {
-        var container = polynomial.Container;
+        var container = polynomial.container;
         if (polynomial.ContainsConstant())
             container[polynomial.getConstantIndex()] = (SymbolContainer)
-                (polynomial.Container[polynomial.getConstantIndex()] - number);
+                (polynomial.container[polynomial.getConstantIndex()] - number);
         else
             container.Add(new SymbolContainer(-number));
 
@@ -133,7 +130,7 @@ public class Polynomial
 
     public static Polynomial operator -(Polynomial polynomial, Symbol symbol)
     {
-        var container = polynomial.Container;
+        var container = polynomial.container;
         if (polynomial.ContainsSymbol(symbol))
             container[polynomial.FindTerm(symbol, 1)].Coefficient--;
         else
@@ -151,7 +148,7 @@ public class Polynomial
 
     public static Polynomial operator *(Polynomial polynomial, double number)
     {
-        List<SymbolContainer> container = polynomial.Container;
+        List<SymbolContainer> container = polynomial.container;
         for (int i = 0; i < container.Count; i++)
             container[i] *= number;
 
@@ -160,7 +157,7 @@ public class Polynomial
 
     public static Polynomial operator *(Polynomial polynomial, Symbol symbol)
     {
-        List<SymbolContainer> container = polynomial.Container;
+        List<SymbolContainer> container = polynomial.container;
         for (int i = 0; i < container.Count; i++)
             container[i] *= symbol;
 
