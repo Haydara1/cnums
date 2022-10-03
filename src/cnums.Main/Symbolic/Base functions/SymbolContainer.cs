@@ -2,7 +2,7 @@
 
 namespace cnums;
 
-internal class SymbolContainer
+public class SymbolContainer
 {
     public List<Symbol> symbol = new();
 
@@ -78,7 +78,7 @@ internal class SymbolContainer
         return result;
     }
 
-    public string ToUnicodeString()
+    private string ToUnicodeString()
     {
         string result;
 
