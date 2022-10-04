@@ -40,6 +40,12 @@ public static class Statistics
         return b;
     }
 
+    public static uint Max(uint a, uint b)
+    {
+        if (a >= b) return a;
+        return b;
+    }
+
     public static int Min(int a, int b)
     {
         if (a <= b) return a;
@@ -71,6 +77,12 @@ public static class Statistics
     }
 
     public static decimal Min(decimal a, decimal b)
+    {
+        if (a <= b) return a;
+        return b;
+    }
+
+    public static uint Min(uint a, uint b)
     {
         if (a <= b) return a;
         return b;
