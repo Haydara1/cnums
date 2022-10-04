@@ -2,35 +2,35 @@
 
 namespace cnums.Symbolic;
 
-public class NaturalDomain : Domain
+public class IntegerDomain : Domain
 {
-    private uint beginning = uint.MinValue;
+    private int beginning = int.MinValue;
 
-    public new uint Begin
+    public new int Begin
     {
         get { return beginning; }
         set { beginning = value; }
     }
 
-    private uint end = uint.MaxValue;
+    private int end = int.MaxValue;
 
-    public new uint End
+    public new int End
     {
         get { return end; }
         set { end = value; }
     }
 
-    private List<NaturalDomain> exceptionDomains = new();
+    private List<IntegerDomain> exceptionDomains = new();
 
-    public new List<NaturalDomain> ExceptionDomains
+    public new List<IntegerDomain> ExceptionDomains
     {
         get { return exceptionDomains; }
         private set { exceptionDomains = value; }
     }
 
-    private List<uint> exceptionValues = new();
+    private List<int> exceptionValues = new();
 
-    public new List<uint> ExceptionValues
+    public new List<int> ExceptionValues
     {
         get { return exceptionValues; }
         private set { exceptionValues = value; }
@@ -52,13 +52,13 @@ public class NaturalDomain : Domain
         private set { openEnd = value; }
     }
 
-    public NaturalDomain(uint beginning, uint end) : base(beginning, end)
+    public IntegerDomain(int beginning, int end) : base(beginning, end)
     {
         this.beginning = Min(beginning, end);
         this.end = Max(beginning, end);
     }
 
-    public NaturalDomain(uint beginning, uint end, bool openBeginning = false, bool openEnd = false) 
+    public IntegerDomain(int beginning, int end, bool openBeginning = false, bool openEnd = false) 
         : base(beginning, end, openBeginning, openEnd)
     {
         this.beginning = Min(beginning, end);
