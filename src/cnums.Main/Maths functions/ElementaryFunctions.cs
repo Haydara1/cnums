@@ -261,6 +261,40 @@ public static partial class Maths
 
     #endregion
 
+    #region Clamp
+
+    public static int Clamp(int min, int max, int number)
+        => Statistics.Max(Statistics.Min(number, max), min);
+
+    public static uint Clamp(uint min, uint max, uint number)
+        => Statistics.Max(Statistics.Min(number, max), min);
+
+    public static short Clamp(short min, short max, short number)
+        => Statistics.Max(Statistics.Min(number, max), min);
+
+    public static ushort Clamp(ushort min, ushort max, ushort number)
+        => Statistics.Max(Statistics.Min(number, max), min);
+
+    public static long Clamp(long min, long max, long number)
+        => Statistics.Max(Statistics.Min(number, max), min);
+
+    public static ulong Clamp(ulong min, ulong max, ulong number)
+        => Statistics.Max(Statistics.Min(number, max), min);
+
+    public static byte Clamp(byte min, byte max, byte number)
+        => Statistics.Max(Statistics.Min(number, max), min);
+
+    public static float Clamp(float min, float max, float number)
+        => Statistics.Max(Statistics.Min(number, max), min);
+
+    public static double Clamp(double min, double max, double number)
+        => Statistics.Max(Statistics.Min(number, max), min);
+
+    public static decimal Clamp(decimal min, decimal max, decimal number)
+        => Statistics.Max(Statistics.Min(number, max), min);
+
+    #endregion
+
     #region Miscellaneous.
 
     //precise
