@@ -1,4 +1,6 @@
-﻿namespace cnums;
+﻿// Reference: https://en.wikipedia.org/wiki/Hyperbolic_functions
+
+namespace cnums;
 
 public static partial class Maths
 {
@@ -10,7 +12,7 @@ public static partial class Maths
     /// <param name="num">An angle, measured in radians.</param>
     /// <returns>The sinh of the given number.</returns>
     public static double Sinh(double num)
-        => (Exp(num) - Exp(-num)) / 2;
+        => (Exp(2 * num) - 1) / 2 * Exp(num);
 
     /// <summary>
     /// Returns the cosh of the given number.
@@ -34,74 +36,48 @@ public static partial class Maths
 
     #endregion
 
+    // Refernce: https://byjus.com/inverse-hyperbolic-functions-formula/
+
     #region Inverse hyperbolic functions
 
-    public static double Asinh(double num)
+    public static double Asinh(double d)
+        => Ln(d + Sqrt(Power(d) + 1)); //precise
+
+    public static double Acosh(double d)
     {
-        double sum;
+        if (d < 1)
+            return double.NaN;
 
-        if (num > -1 && num < 1)
-        {
-            sum = num;
+        return Ln(d + Sqrt(Power(d) - 1));
+    } //precise
 
-            for (int i = 1; i < 151; i++)
-            {
-                double helper = Power(num, (i * 2) + 1) / ((i * 2) + 1);
-
-                double multi = 1, div = 1;
-
-                for (int j = 1; j <= i * 2; j++)
-                    if (j % 2 == 0) div *= j;
-                    else multi *= j;
-
-                helper *= multi;
-                helper /= div;
-
-                if (i % 2 == 0) sum += helper;
-                else sum -= helper;
-            }
-
-            return sum;
-        }
-
-        sum = Ln(2 * num);
-
-        for (int i = 1; i < 100; i++) //Precision error when num < 1
-        {
-            int k = i * 2;
-
-            double helper;
-            double multi = 1, div = 1;
-
-            div *= k * Power(num, k);
-
-            for (int j = 1; j <= k; j++)
-                if (j % 2 == 0) div *= j;
-                else multi *= j;
-
-            helper = multi / div;
-
-            if (i % 2 == 0) sum -= helper;
-            else sum += helper;
-        }
-
-        if (num <= -1) sum *= -1;
-
-        return sum;
-    }
-
-    public static double Atanh(double num)
+    public static double Atanh(double d)
     {
-        if (num >= 1 || num <= -1) return System.Double.NaN;
+        if (d >= 1 || d <= -1) return System.Double.NaN;
 
-        double sum = 0;
+        return 0.5 * Ln((1 + d) / (1 - d));
+    } //precise
 
-        for (int i = 0; i < 100; i++)
-            sum += Power(num, (i * 2) + 1) / ((i * 2) + 1);
+    public static double Acoth(double d)
+    {
+        if (d <= 1 && d >= -1) return System.Double.NaN;
 
-        return sum;
-    }
+        return 0.5 * Ln((d + 1) / (d - 1));
+    } //precise
+
+    public static double Acsch(double d)
+    {
+        if(d == 0) return System.Double.NaN;
+
+        return Ln((1 / d) + Sqrt((1 / Power(d)) + 1));
+    } //precise
+
+    public static double Asech(double d)
+    {
+        if(d <= 0 || d > 1) return System.Double.NaN;
+
+        return Ln((1 + Sqrt(Power(d) + 1) / d));
+    } //precise
+
     #endregion
-
-
 }
