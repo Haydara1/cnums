@@ -46,6 +46,24 @@ public static class Statistics
         return b;
     }
 
+    public static ushort Max(ushort a, ushort b)
+    {
+        if (a >= b) return a;
+        return b;
+    }
+
+    public static ulong Max(ulong a, ulong b)
+    {
+        if (a >= b) return a;
+        return b;
+    }
+
+    public static byte Max(byte a, byte b)
+    {
+        if (a >= b) return a;
+        return b;
+    }
+
     public static int Min(int a, int b)
     {
         if (a <= b) return a;
@@ -83,6 +101,24 @@ public static class Statistics
     }
 
     public static uint Min(uint a, uint b)
+    {
+        if (a <= b) return a;
+        return b;
+    }
+
+    public static ushort Min(ushort a, ushort b)
+    {
+        if (a <= b) return a;
+        return b;
+    }
+
+    public static ulong Min(ulong a, ulong b)
+    {
+        if (a <= b) return a;
+        return b;
+    }
+
+    public static byte Min(byte a, byte b)
     {
         if (a <= b) return a;
         return b;
