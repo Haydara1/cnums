@@ -314,6 +314,31 @@ public static partial class Maths
     }
 
     //precise
+    internal static long Floor(double num, bool _)
+    {
+        string s = num.ToString();
+
+        if (!s.Contains('.')) return (long)num;
+
+        string n = String.Empty;
+
+        foreach (char c in s)
+        {
+            if (c == '.') break;
+            n += c;
+        }
+
+        num = Convert.ToInt64(n);
+
+        if (n[0] == '-')
+        {
+            num--;
+        }
+
+        return (long)num;
+    }
+
+    //precise
     public static int Ceiling(double num)
     {
         string s = num.ToString();
