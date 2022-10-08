@@ -28,6 +28,9 @@ public struct Quaternion
                -quaternion.C,
                -quaternion.D);
 
+    public override string ToString()
+        => $"{this.a}+{this.b}i+{this.c}j+{this.d}k";
+
     public static Quaternion operator +(Quaternion quaternion)
         => quaternion;
 
