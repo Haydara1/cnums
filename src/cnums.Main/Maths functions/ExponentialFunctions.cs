@@ -65,9 +65,12 @@ public static partial class Maths
     /// <returns>Returns e raised to specified power. </returns>
     public static double Exp(double num)
     {
-        int x = Floor(num);
+        if(num > 709)
+            return System.Double.PositiveInfinity;
 
-        //Determine the wights.
+        long x = Floor(num, true);
+
+        //Determine the weights.
         double PowerOfTwo = 0.5;
         double z = num - x;
         double[] w = new double[100];
