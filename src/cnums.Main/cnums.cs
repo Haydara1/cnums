@@ -4,8 +4,8 @@ public static class Utils
 {
     internal static bool Unicode = false;
 
-    private static char[] digits = "0123456789".ToCharArray();
-    private static char[] UnicodeSubsctipts = new char[] { 
+    private readonly static char[] digits = "0123456789".ToCharArray();
+    private readonly static char[] UnicodeSubsctipts = new char[] { 
         '\u2080', 
         '\u2081', 
         '\u2082',
@@ -92,6 +92,34 @@ public static class Utils
 
         return result;
     }
+
+    #region Randoms
+
+    public static int RandInt()
+        => new Random().Next(); 
+
+    public static int RandInt(int minValue, int maxValue)
+        => new Random().Next(minValue, maxValue);
+
+    public static int RandPosInt()
+        => RandInt(0, int.MaxValue);
+
+    public static int RandPosInt(int maxValue)
+        => RandInt(0, maxValue);
+
+    public static int RandNegInt()
+        => -RandPosInt();
+
+    public static int RandNegInt(int minValue)
+        => -RandPosInt(minValue);
+
+    public static double RandDouble()
+        => new Random().NextDouble();
+
+    public static double RandNum()
+        => RandDouble() + RandInt();
+
+    #endregion
 }
 
 /// <summary>
@@ -99,6 +127,7 @@ public static class Utils
 /// </summary>
 public static class Consts
 {
+
     /// <summary>
     ///     Represents the natural logarithmic base, specified by the constant, e.
     /// </summary>
@@ -125,10 +154,7 @@ public static class Consts
     /// </summary>
     public const double Phi = 1.61803398874989484820; //1 / 10 ^ 20 precision 
 
-    ///<summary>
-    ///     Represents the square root of -1, specified by the constant i.
-    /// </summary>
-    public static readonly Algebra.Complex j = new(0, 1);
+    public const double oo = double.PositiveInfinity;
 
     internal static readonly SymbolContainer Zero = new(0);
 
