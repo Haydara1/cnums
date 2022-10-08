@@ -9,6 +9,9 @@ public static class Vector_math
     public static double Magnitude(this Vector2 vector)
         => Sqrt(Power(vector.X) + Power(vector.Y));
 
+    public static double Magnitude(this Vector3 vector)
+        => Sqrt(Power(vector.X) + Power(vector.Y) + Power(vector.Z));
+
     public static bool isNullVector(this Vector2 vector)
         => vector == Vector2.ZERO;
 
@@ -24,7 +27,10 @@ public static class Vector_math
         && vector1.Y == -vector2.Y
         && vector1.Z == -vector2.Z;
 
-    public static Vector2 getUnitVector(Vector2 vector)
+    public static Vector2 Noramilze(this Vector2 vector)
+        => vector / vector.Magnitude();
+
+    public static Vector3 Normalize(this Vector3 vector)
         => vector / vector.Magnitude();
 
     public static double Dot(this Vector2 vector1, Vector2 vector2)
