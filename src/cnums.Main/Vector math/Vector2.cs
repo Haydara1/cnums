@@ -41,6 +41,9 @@ public struct Vector2
         return x == other.x && y == other.y;
     }
 
+    public override string ToString()
+        => $"({this.x}, {this.y})";
+
     public static bool operator ==(Vector2 left, Vector2 right)
         => left.Equals(right);
 
@@ -53,10 +56,7 @@ public struct Vector2
     }
 
     public static double Angle(Vector2 vec1, Vector2 vec2)
-        => Acos(Dot(vec1, vec2) / (Magnitude(vec1) * Magnitude(vec2)));
-
-    public static double Magnitude(Vector2 vector)
-        => Sqrt(Power(vector.x) + Power(vector.y));
+        => Acos(Dot(vec1, vec2) / vec1.Magnitude() * vec2.Magnitude());
 
     public static double Dot(Vector2 vec1, Vector2 vec2)
         => vec1.x * vec2.x
@@ -67,4 +67,17 @@ public struct Vector2
 
     public static Vector2 operator -(Vector2 vec1, Vector2 vec2)
         => new(vec2.x - vec1.x, vec2.y - vec1.y);
+
+    public static Vector2 operator *(Vector2 vector, double scalar)
+        => new(vector.x * scalar, vector.y * scalar);
+
+    public static Vector2 operator *(double scalar, Vector2 vector)
+        => new(vector.x * scalar, vector.y * scalar);
+
+    public static Vector2 operator /(Vector2 vector, double scalar)
+        => new(vector.x / scalar, vector.y / scalar);
+
+    public static Vector2 operator /(double scalar, Vector2 vector)
+        => new(vector.x / scalar, vector.y / scalar);
+
 }
