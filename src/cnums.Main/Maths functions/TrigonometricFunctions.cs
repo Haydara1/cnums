@@ -267,7 +267,7 @@ public static partial class Maths
 
         double[,] v = { { 1, 0 } };
         double PowerOfTwo = 1;
-        double angle = Angles[0];
+        double angle = Consts.Angles[0];
 
         double sigma;
 
