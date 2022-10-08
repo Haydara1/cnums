@@ -73,4 +73,13 @@ public struct Vector3
         => new(vec2.x - vec1.x,
                vec2.y - vec1.y,
                vec2.z - vec1.z);
+
+    public static Vector3 operator *(Vector3 vector, double scalar)
+       => new(vector.x * scalar, vector.y * scalar, vector.z * scalar);
+
+    public static Vector3 operator *(double scalar, Vector3 vector)
+        => vector * scalar;
+
+    public static Vector3 operator /(Vector3 vector, double scalar)
+        => new(vector.x / scalar, vector.y / scalar, vector.z / scalar);
 }
