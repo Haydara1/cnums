@@ -14,6 +14,9 @@ namespace cnums.Algebra
         //One Imaginary
         public static readonly Complex ImaginaryOne = new(0, 1);
 
+        // Imaginary unit
+        public static readonly Complex j = new(0, 1);
+
         private double Real; //Real part of the complex number. (a)
 
         public double Re

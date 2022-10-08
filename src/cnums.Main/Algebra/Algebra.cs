@@ -77,13 +77,13 @@ public static class Algebra
     #region Inverse trigonometric functions for Complex numbers
 
     public static Complex Asin(Complex c)
-        => (1 / j) * Ln(j * c + Sqrt(-(c * c) + 1));
+        => (1 / Complex.j) * Ln(Complex.j * c + Sqrt(-(c * c) + 1));
 
     public static Complex Acos(Complex c)
-        => (1 / j) * Ln(c + j * Sqrt(-(c * c) + 1));
+        => (1 / Complex.j) * Ln(c + Complex.j * Sqrt(-(c * c) + 1));
 
     public static Complex Atan(Complex c)
-        => (1 / (j * 2)) * Ln((j - c) / (j + c));
+        => (1 / (Complex.j * 2)) * Ln((Complex.j - c) / (Complex.j + c));
 
     public static Complex Acot(Complex c)
         => Atan(1 / c);
