@@ -2,7 +2,7 @@
 
 namespace cnums.Symbolic;
 
-public class Polynomial
+public struct Polynomial
 {
     public List<SymbolContainer> container = new() { };
 
@@ -104,8 +104,9 @@ public class Polynomial
     public static Polynomial operator -(Polynomial polynomial)
     {
         // Asked for a question in Stack Overflow: https://stackoverflow.com/questions/73918546/static-operator-function-in-c-sharp-affecting-the-given-arguments
+        // Asked again in Stack Overflow: https://stackoverflow.com/questions/74003130/operator-overloading-changes-operands
 
-        Polynomial result = new(polynomial.container);
+        Polynomial result = polynomial;
 
         for (int i = 0; i < result.container.Count; i++)
             result.container[i] = -result.container[i];
