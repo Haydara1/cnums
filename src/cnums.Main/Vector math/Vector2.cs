@@ -23,8 +23,8 @@ public struct Vector2
 
     public Vector2(Point2 BeginningPoint, Point2 EndPoint)
     {
-        this.x = EndPoint.X - BeginningPoint.X;
-        this.y = EndPoint.Y - BeginningPoint.Y;
+        this.x = EndPoint.A - BeginningPoint.A;
+        this.y = EndPoint.B - BeginningPoint.B;
     }
 
     public Vector2(double x, double y)
