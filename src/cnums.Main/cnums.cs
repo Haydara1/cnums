@@ -2,9 +2,12 @@
 
 public static class Utils
 {
+    #region printing
+
     internal static bool Unicode = false;
 
     private readonly static char[] digits = "0123456789".ToCharArray();
+
     private readonly static char[] UnicodeSubsctipts = new char[] { 
         '\u2080', 
         '\u2081', 
@@ -93,6 +96,8 @@ public static class Utils
         return result;
     }
 
+    #endregion
+
     #region Randoms
 
     public static int RandInt()
@@ -154,9 +159,10 @@ public static class Consts
     /// </summary>
     public const double Phi = 1.61803398874989484820; //1 / 10 ^ 20 precision 
 
+    /// <summary>
+    /// Represents the System.double.PositiveInfinity, named with double o's bc it looks close to the infinity shape.
+    /// </summary>
     public const double oo = double.PositiveInfinity;
-
-    internal static readonly SymbolContainer Zero = new(0);
 
     //Used for Cordic algorithm.
     //Table of consts representing Atan( (1/2)^(0:59) )
