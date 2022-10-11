@@ -4,88 +4,54 @@ namespace cnums;
 
 internal static partial class PrivateFunctions
 {
-    //internal static List<Polynomial> DividePolynomial(Polynomial polynomial)
-    //{
-    //    List<object> cn = polynomial.Container;
-    //    List<Polynomial> polynomials = new();
-    //    List<object> SinglePolynomial = new();
+    public static Polynomial Instance(this Polynomial reference)
+    {
+        Polynomial result = new(new List<SymbolContainer>());
 
-    //    for (int i = 0; i < cn.Count; i++)
-    //    {
-    //        if (cn[i].ToString() == "+")
-    //        {
-    //            polynomials.Add(new(SinglePolynomial));
-    //            SinglePolynomial = new() { '+' };
-    //        }
-    //        else if (cn[i].ToString() == "-")
-    //        {
-    //            polynomials.Add(new(SinglePolynomial));
-    //            SinglePolynomial = new() { '-' };
-    //        }
-    //        else
-    //            SinglePolynomial.Add(cn[i]);
-    //    }
+        for (int i = 0; i < reference.Container.Count; i++)
+            result.Container.Add(reference.Container[i]);
 
-    //    polynomials.Add(new(SinglePolynomial));
+        return result;
+    }
 
-    //    return polynomials;
-    //}
+    public static bool equalSymContainers(SymbolContainer symbolContainer1, SymbolContainer symbolContainer2)
+        => SymbolContainer.equalExpSym(symbolContainer1.symbol,
+                                        symbolContainer2.symbol,
+                                        symbolContainer1.Exponent,
+                                        symbolContainer2.Exponent);
 
-    //internal static bool SingleTerm(this Polynomial polynomial)
-    //{
-    //    int index = 0;
+    public static bool PolynomialContainsSymbol(Polynomial polynomial, SymbolContainer symbolContainer)
+    {
+        for (int i = 0; i < polynomial.Container.Count; i++)
+            if (equalSymContainers(polynomial.Container[i], symbolContainer))
+                return true;
+        return false;
+    }
+    
+    public static int IndexOfSymbol(Polynomial polynomial, SymbolContainer symbolContainer)
+    {
+        for (int i = 0; i < polynomial.Container.Count; i++)
+            if (equalSymContainers(polynomial.Container[i], symbolContainer))
+                return i;
+        return -1;
+    }
 
-    //    foreach (object obj in polynomial.Container)
-    //        if (obj.ToString() == "+"
-    //            || obj.ToString() == "-")
-    //            index++;
+    public static Polynomial Evaluate(this Polynomial polynomial, Symbol symbol, double value)
+    {
+        Polynomial result = polynomial.Instance();
 
-    //    return !(index > 1);
-    //}
+        for(int i = 0; i < result.Container.Count; i++)
+        {
+            result.Container[i] = SymbolContainer.Evaluate(result.Container[i], symbol, value);
+            if (result.Container[i].isConstant())
+            {
+                double val = result.Container[i].Coefficient;
+                result.Container.RemoveAt(i);
+                result += val;
+            }
+        }
 
-    //internal static bool ContainsSymbols(this Polynomial polynomial)
-    //{
-    //    foreach (object obj in polynomial.Container)
-    //        if (obj.GetType() == typeof(Symbol))
-    //            return true;
-    //    return false;
-    //}
-
-    //internal static Symbol[] GetSymbols(this Polynomial polynomial)
-    //{
-    //    polynomial.SetDictionaries();
-    //    return polynomial.SymbolsDicitonary.Values.Distinct().ToArray(); ;
-    //}
-
-    //internal static Symbol[] GetSymbols(this Polynomial polynomial, bool distinct)
-    //{
-    //    if (distinct)
-    //        return GetSymbols(polynomial);
-    //    return polynomial.SymbolsDicitonary.Values.ToArray();
-    //}
-
-    //internal static int GetPartsCount(this Polynomial polynomial)
-    //{
-    //    Object[] cn = polynomial.Container.ToArray();
-    //    int index = 0;
-
-    //    if (!(cn[index].ToString() == "+"
-    //        || cn[index].ToString() == "-"))
-    //        index++;
-
-    //    foreach (object obj in cn)
-    //        if (obj.ToString() == "+"
-    //            || obj.ToString() == "-")
-    //            index++;
-
-    //    return index;
-    //}
-
-    //internal static int GetConstantIndex(Polynomial polynomial)
-    //{
-    //    for (int i = 0; i < polynomial.Container.Count; i++)
-    //        if (polynomial.Container.GetType() == typeof(double))
-    //            return i;
-    //    return -1;
-    //}
+        return result;
+    }
+    
 }
