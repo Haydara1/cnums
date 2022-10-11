@@ -1,4 +1,5 @@
 ﻿using cnums.Symbolic;
+using System.Runtime.CompilerServices;
 
 namespace cnums;
 
@@ -100,7 +101,7 @@ public class SymbolContainer
         return result;
     }
 
-    private static bool equalExpSym(List<Symbol> sym1, 
+    internal static bool equalExpSym(List<Symbol> sym1, 
                                     List<Symbol> sym2, 
                                     List<double> exp1, 
                                     List<double> exp2)
@@ -145,6 +146,34 @@ public class SymbolContainer
 
     private bool isNegative()
         => Coefficient < 0;
+
+    private static SymbolContainer Instance(SymbolContainer reference)
+    {
+        List<Symbol> resultSym = new();
+        resultSym.AddRange(reference.symbol);
+
+        List<double> resultExponent = new();
+        resultExponent.AddRange(reference.Exponent);
+
+        return new(resultSym, reference.Coefficient, resultExponent);
+    }
+
+    internal static SymbolContainer Evaluate(SymbolContainer symbolContainer, Symbol symbol, double value)
+    {
+        SymbolContainer result = Instance(symbolContainer);
+        if (!result.symbol.Contains(symbol))
+            return result;
+
+        int index = result.symbol.IndexOf(symbol);
+
+        value = Maths.Power(value, result.Exponent[index]);
+        result.Exponent.RemoveAt(index);
+        result.symbol.Remove(symbol);
+
+        result.Coefficient *= value;
+
+        return result;
+    }
 
     #region Addition
 
@@ -234,37 +263,39 @@ public class SymbolContainer
 
     public static SymbolContainer operator *(SymbolContainer symbolContainer, Symbol symbol)
     {
-        if (symbolContainer.symbol.Contains(symbol))
-            symbolContainer.Exponent[symbolContainer.symbol.IndexOf(symbol)]++;
+        SymbolContainer result = Instance(symbolContainer);
+
+
+        if (result.symbol.Contains(symbol))
+            result.Exponent[result.symbol.IndexOf(symbol)]++;
         else
         {
-            symbolContainer.symbol.Add(symbol);
-            symbolContainer.Exponent.Add(1);
+            result.symbol.Add(symbol);
+            result.Exponent.Add(1);
         }
 
-        return new(symbolContainer.symbol, symbolContainer.Coefficient, symbolContainer.Exponent);
+        return result;
     }
 
     public static SymbolContainer operator *(SymbolContainer symbolContainer1, SymbolContainer symbolContainer2)
     {
-        List<Symbol> symList = symbolContainer1.symbol;
-        List<double> expList = symbolContainer1.Exponent;
+        SymbolContainer result = Instance(symbolContainer1);
 
         for(int i = 0; i < symbolContainer2.symbol.Count; i++)
         {
-            if (symList.Contains(symbolContainer2.symbol[i]))
-                expList[symList.IndexOf(
+            if (result.symbol.Contains(symbolContainer2.symbol[i]))
+                result.Exponent[result.symbol.IndexOf(
                     symbolContainer2.symbol[i])] += symbolContainer2.Exponent[i];
             else
             {
-                symList.Add(symbolContainer2.symbol[i]);
-                expList.Add(symbolContainer2.Exponent[i]);
+                result.symbol.Add(symbolContainer2.symbol[i]);
+                result.Exponent.Add(symbolContainer2.Exponent[i]);
             }
         }
 
-        return new(symList,
-            symbolContainer1.Coefficient * symbolContainer2.Coefficient,
-            expList);
+        result.Coefficient *= symbolContainer2.Coefficient;
+
+        return result;
     }
 
     #endregion
