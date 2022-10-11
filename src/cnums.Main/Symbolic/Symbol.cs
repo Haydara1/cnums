@@ -27,7 +27,7 @@
             this.Sym = symbol;
         }
 
-        public Symbol() { }
+        internal Symbol() { }
         
         public Symbol(char symbol, uint subscript)
         {
@@ -106,7 +106,15 @@
 
         #endregion
 
-        
+        #region Multiplication
+
+        public static Polynomial operator *(Symbol symbol, double number)
+            => new(new List<SymbolContainer>() { new(symbol, number) });
+
+        public static Polynomial operator *(double number, Symbol symbol)
+            => symbol * number;
+
+        #endregion
 
         #region Comparision
 
@@ -118,6 +126,4 @@
 
         #endregion
     }
-
-
 }
