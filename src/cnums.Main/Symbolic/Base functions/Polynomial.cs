@@ -84,6 +84,9 @@ public struct Polynomial
         return result;
     }
 
+    public Function ToFunction()
+        => new(this);
+
     #region Addition
 
     public static Polynomial operator +(Polynomial polynomial)

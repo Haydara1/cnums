@@ -125,6 +125,12 @@ public static class Utils
         => RandDouble() + RandInt();
 
     #endregion
+
+    public static Symbolic.Function ToFunction(this double number)
+        => new(number);
+
+    public static Symbolic.Function ToFunction(this int number)
+        => new(number);
 }
 
 /// <summary>

@@ -60,6 +60,9 @@
         public override string ToString()
             => $"{this.Sym}{this.Subscript}";
 
+        public Function ToFunction()
+            => new(this);
+
         #region Addition.
 
         public static Polynomial operator +(Symbol symbol)
