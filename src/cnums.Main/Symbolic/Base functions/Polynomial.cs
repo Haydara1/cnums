@@ -4,7 +4,13 @@ namespace cnums.Symbolic;
 
 public struct Polynomial
 {
-    public List<SymbolContainer> container = new() { };
+    private List<SymbolContainer> container = new() { };
+
+    public List<SymbolContainer> Container 
+    { 
+        get { return container; } 
+        set { container = value; }
+    }
 
     public Polynomial(List<SymbolContainer> symbolContainers)
         => this.container = symbolContainers;
@@ -62,6 +68,22 @@ public struct Polynomial
         return -1;
     }
 
+    public Polynomial Evaluate(Symbol symbol, double value)
+        => PrivateFunctions.Evaluate(this, symbol, value);
+
+    public Polynomial Evaluate(Symbol[] symbols, double[] values)
+    {
+        if (symbols.Length != values.Length)
+            throw new ArgumentException("Arrays must be the same size.");
+
+        Polynomial result = this.Instance();
+
+        for(int i = 0; i < symbols.Length; i++)
+            result = PrivateFunctions.Evaluate(result, symbols[i], values[i]);
+
+        return result;
+    }
+
     #region Addition
 
     public static Polynomial operator +(Polynomial polynomial)
@@ -69,14 +91,15 @@ public struct Polynomial
 
     public static Polynomial operator +(Polynomial polynomial, double number)
     {
-        var container = polynomial.container;
-        if (polynomial.ContainsConstant())
-            container[polynomial.getConstantIndex()] = (SymbolContainer)
-                (polynomial.container[polynomial.getConstantIndex()] + number);
+        Polynomial result = polynomial.Instance();
+
+        if (result.ContainsConstant())
+            result.container[result.getConstantIndex()] = (SymbolContainer)
+                (result.container[result.getConstantIndex()] + number);
         else
-            container.Add(new SymbolContainer(number));
+            result.container.Add(new SymbolContainer(number));
         
-        return new(container);
+        return result;
     }
 
     public static Polynomial operator +(double number, Polynomial polynomial)
@@ -84,17 +107,49 @@ public struct Polynomial
 
     public static Polynomial operator +(Polynomial polynomial, Symbol symbol)
     {
-        var container = polynomial.container;
-        if (polynomial.ContainsSymbol(symbol))
-            container[polynomial.FindTerm(symbol, 1)].Coefficient++;
-        else
-            container.Add(new SymbolContainer(symbol));
+        Polynomial result = polynomial.Instance();
+        SymbolContainer symbolContainer = new(symbol);
 
-        return new(container);
+        if (PolynomialContainsSymbol(result, symbolContainer))
+        {
+            int index = IndexOfSymbol(result, symbolContainer);
+            result.container[index] = new(result.container[index].symbol,
+                                    result.container[index].Coefficient + 1,
+                                    result.container[index].Exponent);
+        }
+        else
+            result.container.Add(new SymbolContainer(symbol));
+
+        return result;
     }
 
     public static Polynomial operator +(Symbol symbol, Polynomial polynomial)
         => polynomial + symbol;
+
+    public static Polynomial operator +(Polynomial polynomial, SymbolContainer symbolContainer)
+    {
+        Polynomial result = polynomial.Instance();
+
+        if (PolynomialContainsSymbol(result, symbolContainer))
+        {
+            int index = IndexOfSymbol(result, symbolContainer);
+            result.Container[index] = (SymbolContainer)(result.Container[index] + symbolContainer);
+        }
+        else
+            result.Container.Add(symbolContainer);
+
+        return result;
+    }
+
+    public static Polynomial operator +(Polynomial polynomial1, Polynomial polynomial2)
+    {
+        Polynomial result = polynomial1.Instance();
+
+        for (int i = 0; i < polynomial2.Container.Count; i++)
+            result += polynomial2.Container[i];
+
+        return result;
+    }
 
     #endregion
 
@@ -106,24 +161,25 @@ public struct Polynomial
         // Asked for a question in Stack Overflow: https://stackoverflow.com/questions/73918546/static-operator-function-in-c-sharp-affecting-the-given-arguments
         // Asked again in Stack Overflow: https://stackoverflow.com/questions/74003130/operator-overloading-changes-operands
 
-        Polynomial result = polynomial;
+        Polynomial result = new(new List<SymbolContainer>());
 
-        for (int i = 0; i < result.container.Count; i++)
-            result.container[i] = -result.container[i];
+        for (int i = 0; i < polynomial.container.Count; i++)
+            result.container.Add(-polynomial.container[i]);
 
         return result;
     }
 
     public static Polynomial operator -(Polynomial polynomial, double number)
     {
-        var container = polynomial.container;
-        if (polynomial.ContainsConstant())
-            container[polynomial.getConstantIndex()] = (SymbolContainer)
-                (polynomial.container[polynomial.getConstantIndex()] - number);
-        else
-            container.Add(new SymbolContainer(-number));
+        Polynomial result = polynomial.Instance();
 
-        return new(container);
+        if (result.ContainsConstant())
+            result.container[result.getConstantIndex()] = (SymbolContainer)
+                (result.container[result.getConstantIndex()] - number);
+        else
+            result.container.Add(new SymbolContainer(-number));
+
+        return result;
     }
 
     public static Polynomial operator -(double number, Polynomial polynomial)
@@ -131,17 +187,30 @@ public struct Polynomial
 
     public static Polynomial operator -(Polynomial polynomial, Symbol symbol)
     {
-        var container = polynomial.container;
-        if (polynomial.ContainsSymbol(symbol))
-            container[polynomial.FindTerm(symbol, 1)].Coefficient--;
-        else
-            container.Add(-new SymbolContainer(symbol));
+        Polynomial result = polynomial.Instance();
+        SymbolContainer symbolContainer = new(symbol);
 
-        return new(container);
+        if (PolynomialContainsSymbol(result, symbolContainer))
+        {
+            int index = IndexOfSymbol(result, symbolContainer);
+            result.container[index] = new(result.container[index].symbol,
+                                    result.container[index].Coefficient - 1,
+                                    result.container[index].Exponent);
+        }
+        else
+            result.container.Add(-new SymbolContainer(symbol));
+
+        return result;
     }
 
-    //public static Polynomial operator -(Symbol symbol, Polynomial polynomial)
-    //    => -(-symbol + polynomial);
+    public static Polynomial operator -(Symbol symbol, Polynomial polynomial)
+        => symbol + (-polynomial);
+
+    public static Polynomial operator -(Polynomial polynomial, SymbolContainer symbolContainer)
+        => polynomial + (-symbolContainer);
+
+    public static Polynomial operator -(Polynomial polynomial1, Polynomial polynomial2)
+        => polynomial1 + (-polynomial2);
 
     #endregion
 
@@ -149,22 +218,32 @@ public struct Polynomial
 
     public static Polynomial operator *(Polynomial polynomial, double number)
     {
-        List<SymbolContainer> container = polynomial.container;
-        for (int i = 0; i < container.Count; i++)
-            container[i] *= number;
+        Polynomial result = polynomial.Instance();
+        for (int i = 0; i < result.container.Count; i++)
+            result.container[i] *= number;
 
-        return new(container);
+        return result;
     }
 
     public static Polynomial operator *(Polynomial polynomial, Symbol symbol)
     {
-        List<SymbolContainer> container = polynomial.container;
-        for (int i = 0; i < container.Count; i++)
-            container[i] *= symbol;
+        Polynomial result = polynomial.Instance();
+        for (int i = 0; i < result.container.Count; i++)
+            result.container[i] *= symbol;
 
-        return new(container);
+        return result;
     }
 
-
     #endregion
+
+    public static Polynomial operator /(Polynomial polynomial, double number)
+    {
+        {
+            Polynomial result = polynomial.Instance();
+            for (int i = 0; i < result.container.Count; i++)
+                result.container[i] /= number;
+
+            return result;
+        }
+    }
 }
