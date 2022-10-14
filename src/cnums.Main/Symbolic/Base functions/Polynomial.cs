@@ -4,19 +4,27 @@ namespace cnums.Symbolic;
 
 public struct Polynomial
 {
+    #region Properties
+
     private List<SymbolContainer> container = new() { };
 
-    public List<SymbolContainer> Container 
+    internal List<SymbolContainer> Container 
     { 
         get { return container; } 
         set { container = value; }
     }
 
-    public Polynomial(List<SymbolContainer> symbolContainers)
+    #endregion
+
+    #region Constructors
+
+    internal Polynomial(List<SymbolContainer> symbolContainers)
         => this.container = symbolContainers;
 
     internal Polynomial(Polynomial polynomial, bool _)
         => this.container = polynomial.container;
+
+    #endregion
 
     public override string ToString()
     {
@@ -129,21 +137,6 @@ public struct Polynomial
     public static Polynomial operator +(Symbol symbol, Polynomial polynomial)
         => polynomial + symbol;
 
-    public static Polynomial operator +(Polynomial polynomial, SymbolContainer symbolContainer)
-    {
-        Polynomial result = polynomial.Instance();
-
-        if (PolynomialContainsSymbol(result, symbolContainer))
-        {
-            int index = IndexOfSymbol(result, symbolContainer);
-            result.Container[index] = (SymbolContainer)(result.Container[index] + symbolContainer);
-        }
-        else
-            result.Container.Add(symbolContainer);
-
-        return result;
-    }
-
     public static Polynomial operator +(Polynomial polynomial1, Polynomial polynomial2)
     {
         Polynomial result = polynomial1.Instance();
@@ -153,6 +146,23 @@ public struct Polynomial
 
         return result;
     }
+
+    public static Function operator +(Function function, Polynomial polynomial)
+    {
+        if (function.type == typeof(double))
+            return new((double)function.function + polynomial);
+
+        else if (function.type == typeof(Polynomial))
+            return new((Polynomial)function.function + polynomial);
+
+        else if (function.type == typeof(Symbol))
+            return new((Symbol)function.function + polynomial);
+
+        throw new CnumsException();
+    }
+
+    public static Function operator +(Polynomial polynomial, Function function)
+        => function + polynomial;
 
     #endregion
 
@@ -209,11 +219,14 @@ public struct Polynomial
     public static Polynomial operator -(Symbol symbol, Polynomial polynomial)
         => symbol + (-polynomial);
 
-    public static Polynomial operator -(Polynomial polynomial, SymbolContainer symbolContainer)
-        => polynomial + (-symbolContainer);
-
     public static Polynomial operator -(Polynomial polynomial1, Polynomial polynomial2)
         => polynomial1 + (-polynomial2);
+
+    public static Function operator -(Function function, Polynomial polynomial)
+        => function + -polynomial;
+
+    public static Function operator -(Polynomial polynomial, Function function)
+        => polynomial + -function;
 
     #endregion
 
@@ -239,6 +252,8 @@ public struct Polynomial
 
     #endregion
 
+    #region Division
+
     public static Polynomial operator /(Polynomial polynomial, double number)
     {
         {
@@ -249,4 +264,6 @@ public struct Polynomial
             return result;
         }
     }
+
+    #endregion
 }
