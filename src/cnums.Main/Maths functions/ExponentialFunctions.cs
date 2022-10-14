@@ -124,7 +124,7 @@ public static partial class Maths
     /// <param name="y">Power.</param>
     /// <returns>Returns double-point floating-value number.</returns>
     public static double Power(double x, int y = 2)
-    {
+    {   
         double pow = 1;
         bool NGPow = false;
 
