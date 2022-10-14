@@ -42,12 +42,18 @@ internal static partial class PrivateFunctions
 
         for(int i = 0; i < result.Container.Count; i++)
         {
+            if (result.Container[i].isConstant())
+                continue;
+
             result.Container[i] = SymbolContainer.Evaluate(result.Container[i], symbol, value);
+
             if (result.Container[i].isConstant())
             {
                 double val = result.Container[i].Coefficient;
                 result.Container.RemoveAt(i);
                 result += val;
+
+                i--;
             }
         }
 
