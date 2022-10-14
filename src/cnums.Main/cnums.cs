@@ -1,6 +1,8 @@
-﻿namespace cnums;
+﻿using cnums.Symbolic;
 
-public static class Utils
+namespace cnums;
+
+public static class Cnums
 {
     #region printing
 
@@ -126,11 +128,17 @@ public static class Utils
 
     #endregion
 
-    public static Symbolic.Function ToFunction(this double number)
+    public static Function ToFunction(this double number)
         => new(number);
 
-    public static Symbolic.Function ToFunction(this int number)
+    public static Function ToFunction(this int number)
         => new(number);
+
+    public static Function ToFunction(this Symbol symbol)
+            => new(symbol);
+
+    public static Function ToFunction(this Polynomial polynomial)
+        => new(polynomial); 
 }
 
 /// <summary>
