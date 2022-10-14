@@ -60,9 +60,6 @@
         public override string ToString()
             => $"{this.Sym}{this.Subscript}";
 
-        public Function ToFunction()
-            => new(this);
-
         #region Addition.
 
         public static Polynomial operator +(Symbol symbol)
@@ -116,6 +113,16 @@
 
         public static Polynomial operator *(double number, Symbol symbol)
             => symbol * number;
+
+        public static Polynomial operator *(Symbol symbol1, Symbol symbol2)
+        {
+            object multiplication = new SymbolContainer(symbol1) * new SymbolContainer(symbol2);
+
+            if (multiplication.GetType() == typeof(cnums.SymbolContainer))
+                return new(new List<SymbolContainer>() { (SymbolContainer)multiplication });
+
+            return new((Polynomial)multiplication, true);
+        }
 
         #endregion
 
