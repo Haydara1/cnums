@@ -1,9 +1,8 @@
 ﻿using cnums.Symbolic;
-using System.Runtime.CompilerServices;
 
 namespace cnums;
 
-public class SymbolContainer
+internal class SymbolContainer
 {
     public List<Symbol> symbol = new();
 
@@ -56,7 +55,7 @@ public class SymbolContainer
             return Coefficient > 0 ? "+" + Maths.Abs(Coefficient).ToString() :
                                      "-" + Maths.Abs(Coefficient).ToString();
 
-        if (Utils.Unicode)
+        if (Cnums.Unicode)
             return ToUnicodeString();
 
         string result;
@@ -161,12 +160,17 @@ public class SymbolContainer
     internal static SymbolContainer Evaluate(SymbolContainer symbolContainer, Symbol symbol, double value)
     {
         SymbolContainer result = Instance(symbolContainer);
-        if (!result.symbol.Contains(symbol))
-            return result;
 
         int index = result.symbol.IndexOf(symbol);
 
-        value = Maths.Power(value, result.Exponent[index]);
+        if (index == -1)
+            return result;
+
+        if(PrivateFunctions.IsInteger(result.Exponent[index]))
+            value = Maths.Power(value, (int)result.Exponent[index]);
+        else
+            value = Maths.Power(value, result.Exponent[index]);
+
         result.Exponent.RemoveAt(index);
         result.symbol.Remove(symbol);
 
@@ -213,6 +217,21 @@ public class SymbolContainer
         return new Polynomial(new List<SymbolContainer>() { symbolContainer1, symbolContainer2 });
     }
 
+    public static Polynomial operator +(Polynomial polynomial, SymbolContainer symbolContainer)
+    {
+        Polynomial result = polynomial.Instance();
+
+        if (PrivateFunctions.PolynomialContainsSymbol(result, symbolContainer))
+        {
+            int index = PrivateFunctions.IndexOfSymbol(result, symbolContainer);
+            result.Container[index] = (SymbolContainer)(result.Container[index] + symbolContainer);
+        }
+        else
+            result.Container.Add(symbolContainer);
+
+        return result;
+    }
+
     #endregion
 
     #region Substraction
@@ -253,6 +272,9 @@ public class SymbolContainer
 
         return new Polynomial(new List<SymbolContainer>() { symbolContainer1, -symbolContainer2 });
     }
+
+    public static Polynomial operator -(Polynomial polynomial, SymbolContainer symbolContainer)
+        => polynomial + (-symbolContainer);
 
     #endregion
 

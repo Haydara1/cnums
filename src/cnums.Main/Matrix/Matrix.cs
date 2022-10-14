@@ -75,7 +75,7 @@ public struct Matrix
     {
         string str = "";
 
-        if (Utils.Unicode)
+        if (Cnums.Unicode)
             return ToUnicodeString();
 
         for (int i = 0; i < rows; i++)
