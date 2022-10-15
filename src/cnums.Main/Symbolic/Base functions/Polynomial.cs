@@ -26,6 +26,8 @@ public struct Polynomial
 
     #endregion
 
+#pragma warning disable IDE1006
+
     public override string ToString()
     {
         string poly = "";
@@ -47,15 +49,6 @@ public struct Polynomial
         return false;
     }
 
-    private int getConstantIndex()
-    {
-        foreach (SymbolContainer symbolContainer in this.container)
-            if (symbolContainer.isConstant())
-                return container.IndexOf(symbolContainer);
-
-        return -1;
-    }
-
     private bool ContainsSymbol(Symbol symbol)
     {
         foreach (SymbolContainer symbolContainer in this.container)
@@ -63,6 +56,15 @@ public struct Polynomial
                 return true;
 
         return false;
+    }
+
+    private int getConstantIndex()
+    {
+        foreach (SymbolContainer symbolContainer in this.container)
+            if (symbolContainer.isConstant())
+                return container.IndexOf(symbolContainer);
+
+        return -1;
     }
 
     private int FindTerm(Symbol symbol, double exponent)
@@ -74,6 +76,31 @@ public struct Polynomial
                 return this.container.IndexOf(symbolContainer);
 
         return -1;
+    }
+
+    internal double getDegree()
+    {
+        double degree = 0;
+        
+        foreach(SymbolContainer symbolContainer in this.container)
+            degree = Statistics.Max(degree, symbolContainer.getDegree());
+
+        return degree;
+    }
+
+    /// <summary>
+    /// Changes the symbol a to symbol b.
+    /// </summary>
+    /// <param name="a">The symbol wanted to be changed.</param>
+    /// <param name="b">The symbol that will be updated to.</param>
+    public Polynomial ChangeSymbol(Symbol a, Symbol b)
+    {
+        Polynomial polynomial = this.Instance();
+
+        for (int i = 0; i < polynomial.Container.Count; i++)
+            polynomial.Container[i] = polynomial.Container[i].ChangeSymbol(a, b);
+
+        return polynomial;
     }
 
     public Polynomial Evaluate(Symbol symbol, double value)
@@ -94,6 +121,8 @@ public struct Polynomial
 
     public Function ToFunction()
         => new(this);
+
+#pragma warning restore IDE1006
 
     #region Addition
 
@@ -241,6 +270,9 @@ public struct Polynomial
         return result;
     }
 
+    public static Polynomial operator *(double number, Polynomial polynomial)
+        => polynomial * number;
+
     public static Polynomial operator *(Polynomial polynomial, Symbol symbol)
     {
         Polynomial result = polynomial.Instance();
@@ -248,6 +280,19 @@ public struct Polynomial
             result.container[i] *= symbol;
 
         return result;
+    }
+
+    public static Polynomial operator *(Symbol symbol, Polynomial polynomial)
+        => polynomial * symbol;
+
+    public static Polynomial operator *(Polynomial polynomial1, Polynomial polynomial2)
+    {
+        Polynomial polynomial = polynomial1.Instance();
+
+        foreach (SymbolContainer symbolContainer in polynomial2.container)
+            polynomial *= symbolContainer;
+
+        return polynomial;
     }
 
     #endregion
@@ -264,6 +309,18 @@ public struct Polynomial
             return result;
         }
     }
+
+    public static RationalFunction operator /(double number, Polynomial polynomial)
+        => new(new(new() { new(number) }), polynomial);
+
+    public static RationalFunction operator /(Polynomial polynomial, Symbol symbol)
+        => new(polynomial, new(new() { new(symbol) }));
+
+    public static RationalFunction operator /(Symbol symbol, Polynomial polynomial)
+        => new(new(new() { new(symbol) }), polynomial);
+
+    public static RationalFunction operator /(Polynomial polynomial1, Polynomial polynomial2)
+        => new(polynomial1, polynomial2);
 
     #endregion
 }
