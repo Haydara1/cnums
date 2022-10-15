@@ -45,6 +45,8 @@ internal class SymbolContainer
 
     #endregion
 
+#pragma warning disable IDE1006
+
     public override string ToString()
     {
         Clean();
@@ -120,17 +122,6 @@ internal class SymbolContainer
         return true;
     }
 
-    private void Clean()
-    {
-        for(int i = 0; i < this.Exponent.Count; i++)
-            if (this.Exponent[i] == 0)
-            {
-                this.Exponent.RemoveAt(i);
-                this.symbol.RemoveAt(i);
-                i--;
-            }
-    }
-
     internal bool isConstant()
     {
         foreach(double exponent in Exponent)
@@ -146,6 +137,20 @@ internal class SymbolContainer
     private bool isNegative()
         => Coefficient < 0;
 
+    private void Clean()
+    {
+        for(int i = 0; i < this.Exponent.Count; i++)
+            if (this.Exponent[i] == 0)
+            {
+                this.Exponent.RemoveAt(i);
+                this.symbol.RemoveAt(i);
+                i--;
+            }
+    }
+    
+    public double getDegree()
+        => Exponent.Count != 0 ? Exponent.Max() : 0;
+
     private static SymbolContainer Instance(SymbolContainer reference)
     {
         List<Symbol> resultSym = new();
@@ -155,6 +160,17 @@ internal class SymbolContainer
         resultExponent.AddRange(reference.Exponent);
 
         return new(resultSym, reference.Coefficient, resultExponent);
+    }
+
+    internal SymbolContainer ChangeSymbol(Symbol a, Symbol b)
+    {
+        if (!this.symbol.Contains(a))
+            return this;
+
+        SymbolContainer symbolContainer = Instance(this);
+        symbolContainer.symbol[symbolContainer.symbol.IndexOf(a)] = b;
+
+        return symbolContainer;
     }
 
     internal static SymbolContainer Evaluate(SymbolContainer symbolContainer, Symbol symbol, double value)
@@ -178,6 +194,8 @@ internal class SymbolContainer
 
         return result;
     }
+
+#pragma warning restore IDE1006
 
     #region Addition
 
@@ -319,6 +337,18 @@ internal class SymbolContainer
 
         return result;
     }
+
+    public static Polynomial operator *(Polynomial polynomial, SymbolContainer symbolContainer)
+    {
+        Polynomial result = polynomial.Instance();
+        for (int i = 0; i < result.Container.Count; i++)
+            result.Container[i] *= symbolContainer;
+
+        return result;
+    }
+
+    public static Polynomial operator *(SymbolContainer symbolContainer, Polynomial polynomial)
+        => polynomial * symbolContainer;
 
     #endregion
 
