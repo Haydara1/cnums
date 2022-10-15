@@ -83,6 +83,18 @@ public class Function
         throw new CnumsException();
     }
 
+    public double getDegree()
+    {
+        if (type == typeof(double))
+            return 0;
+        else if (type == typeof(Symbol))
+            return 1;
+        else if (type == typeof(Polynomial))
+            return PrivateFunctions.getDegree((Polynomial)function);
+
+        throw new CnumsException();
+    }
+
     public override string? ToString()
         => function.ToString();
 
