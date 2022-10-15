@@ -141,7 +141,6 @@ public static class Variables
     /// </summary>
     public static readonly Symbol z = new('z');
 
-
     #endregion
 
     #region Upper case Latin letters
