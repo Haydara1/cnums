@@ -6,9 +6,13 @@ internal class SymbolContainer
 {
     public List<Symbol> symbol = new();
 
-    public double Coefficient;
+    public double Coefficient = 1;
 
     public List<double> Exponent = new() { };
+
+    public List<TrigonometricFunction> trigonometricFunction = new() { };
+
+    public List<double> trigonometricExponents = new() { };
 
     #region Constructors
 
@@ -43,6 +47,13 @@ internal class SymbolContainer
         this.symbol.Add(symbol);
     }
 
+    public SymbolContainer(TrigonometricFunction trigonometric)
+    {
+        this.trigonometricFunction.Add(trigonometric);
+        this.trigonometricExponents.Add(1d);
+    }
+        
+
     #endregion
 
 #pragma warning disable IDE1006
@@ -51,11 +62,11 @@ internal class SymbolContainer
     {
         Clean();
 
-        if (isNull())
-            return "";
-        else if (isConstant())
-            return Coefficient > 0 ? "+" + Maths.Abs(Coefficient).ToString() :
-                                     "-" + Maths.Abs(Coefficient).ToString();
+        //if (isNull())
+        //    return "";
+        //if (isConstant())
+        //    return Coefficient > 0 ? "+" + Maths.Abs(Coefficient).ToString() :
+        //                             "-" + Maths.Abs(Coefficient).ToString();
 
         if (Cnums.Unicode)
             return ToUnicodeString();
@@ -77,11 +88,21 @@ internal class SymbolContainer
                 result += Exponent[i] == 1 ? "*" + symbol[i] : $"*{symbol[i]}^{Exponent[i]}";
         }   
 
+        for(int i = 0; i < trigonometricFunction.Count; i++)
+        {   
+            if (result is "+" or "-")
+                result += trigonometricExponents[i] == 1 ? 
+                    trigonometricFunction[i] : $"{trigonometricFunction[i]}^{trigonometricExponents[i]}";
+            else
+                result += trigonometricExponents[i] == 1 ?
+                    "*" + trigonometricFunction[i] : $"*{trigonometricFunction[i]}^{trigonometricFunction[i]}";
+        }
+
         return result;
     }
 
     private string ToUnicodeString()
-    {
+    {   
         string result;
 
         if (Coefficient is 1)
@@ -97,6 +118,16 @@ internal class SymbolContainer
                 result += Exponent[i] == 1 ? symbol[i] : $"{symbol[i]}{Exponent[i].UnicodeExponent()}";
             else
                 result += Exponent[i] == 1 ? symbol[i] : $"{symbol[i]}{Exponent[i].UnicodeExponent()}";
+        }
+
+        for (int i = 0; i < trigonometricFunction.Count; i++)
+        {   
+            if (result is "+" or "-")
+                result += trigonometricExponents[i] == 1 ?
+                    trigonometricFunction[i] : $"{trigonometricFunction[i]}{trigonometricExponents[i].UnicodeExponent()}";
+            else
+                result += trigonometricExponents[i] == 1 ?
+                    trigonometricFunction[i] : $"{trigonometricFunction[i]}{trigonometricExponents[i].UnicodeExponent()}";
         }
 
         return result;

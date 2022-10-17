@@ -88,11 +88,6 @@ public struct Polynomial
         return degree;
     }
 
-    /// <summary>
-    /// Changes the symbol a to symbol b.
-    /// </summary>
-    /// <param name="a">The symbol wanted to be changed.</param>
-    /// <param name="b">The symbol that will be updated to.</param>
     public Polynomial ChangeSymbol(Symbol a, Symbol b)
     {
         Polynomial polynomial = this.Instance();
@@ -117,6 +112,45 @@ public struct Polynomial
             result = PrivateFunctions.Evaluate(result, symbols[i], values[i]);
 
         return result;
+    }
+
+    private object AddObject(object obj) => obj.GetType().Name switch
+    { 
+        nameof(Double)
+        => this.Instance() + (double)obj,
+
+        nameof(Symbol)
+        => this.Instance() + (Symbol)obj,
+
+        nameof(Polynomial)
+        => this.Instance() + (Polynomial)obj,
+
+        nameof(TrigonometricFunction)
+        => this.Instance() + new Polynomial(new() { new((TrigonometricFunction)obj) }),
+
+        nameof(SymbolContainer)
+        => this.Instance() + new Polynomial(new() { (SymbolContainer)obj }),
+
+        _ => SwitchDefault(obj, '+'),
+    };
+
+    private object SubstractObject(object obj) => obj.GetType().Name switch
+    {
+        nameof(Double) => this.Instance() - (double)obj,
+        nameof(Symbol) => this.Instance() - (Symbol)obj,
+        nameof(Polynomial) => this.Instance() - (Polynomial)obj,
+        _ => throw new CnumsException()
+    };
+
+    private object SwitchDefault(object obj, char operation)
+    {
+        if (obj is TrigonometricFunction function)
+            if (operation == '+')
+                return this.Instance() + new Polynomial(new() { new(function) });
+            else if (operation == '-')
+                return this.Instance() - new Polynomial(new() { new(function) });
+
+        throw new CnumsException();
     }
 
     public Function ToFunction()
@@ -176,19 +210,14 @@ public struct Polynomial
         return result;
     }
 
+    public static Function operator +(Polynomial polynomial, object obj)
+        => polynomial.AddObject(obj).ToFunction();
+
+    public static Function operator +(object obj, Polynomial polynomial)
+        => polynomial + obj;
+
     public static Function operator +(Function function, Polynomial polynomial)
-    {
-        if (function.type == typeof(double))
-            return new((double)function.function + polynomial);
-
-        else if (function.type == typeof(Polynomial))
-            return new((Polynomial)function.function + polynomial);
-
-        else if (function.type == typeof(Symbol))
-            return new((Symbol)function.function + polynomial);
-
-        throw new CnumsException();
-    }
+        => polynomial + function.function;
 
     public static Function operator +(Polynomial polynomial, Function function)
         => function + polynomial;
@@ -250,6 +279,12 @@ public struct Polynomial
 
     public static Polynomial operator -(Polynomial polynomial1, Polynomial polynomial2)
         => polynomial1 + (-polynomial2);
+
+    public static Function operator -(Polynomial polynomial, object obj)
+        => polynomial.SubstractObject(obj).ToFunction();
+
+    public static Function operator -(object obj, Polynomial polynomial)
+        => -polynomial + obj;
 
     public static Function operator -(Function function, Polynomial polynomial)
         => function + -polynomial;
