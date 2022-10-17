@@ -138,7 +138,16 @@ public static class Cnums
             => new(symbol);
 
     public static Function ToFunction(this Polynomial polynomial)
-        => new(polynomial); 
+        => new(polynomial);
+
+    public static Function ToFunction(this object obj) => obj.GetType().Name switch
+    { 
+        nameof(Double) => ToFunction((Double) obj),
+        nameof(Symbol) => ToFunction((Symbol) obj),
+        nameof(Polynomial) => ToFunction((Polynomial) obj),
+        _ => throw new CnumsException(),
+    };
+
 }
 
 /// <summary>
