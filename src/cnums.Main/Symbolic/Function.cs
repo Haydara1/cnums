@@ -2,7 +2,6 @@
 
 public class Function
 {
-
     internal object function;
     
     internal Type type;
@@ -21,6 +20,13 @@ public class Function
     {
         function = polynomial;
         type = typeof(Polynomial);
+        Domain = new();
+    }
+
+    internal Function(TrigonometricFunction trigonometricFunction)
+    {
+        function = trigonometricFunction;
+        type = typeof(TrigonometricFunction);
         Domain = new();
     }
 
@@ -59,7 +65,7 @@ public class Function
         throw new CnumsException();
     }
 
-    public object Evaluate(Symbol[] symbol, double[] value)
+    public object Evaluate(Symbol[] symbol, double[] value, bool _)
     {
         if (symbol.Length != value.Length)
             throw new ArgumentException("Arguments must be the same length");
@@ -95,8 +101,14 @@ public class Function
         throw new CnumsException();
     }
 
+    public bool isConstant()
+        => type == typeof(double);
+
+    public bool isNegative()
+        => (isConstant() && (double)function < 0);
+
     public override string? ToString()
-        => function.ToString();
+        => $"{((isConstant() && !isNegative()) ? "+" : "")}{function}";
 
     #region Addition
 
@@ -104,7 +116,7 @@ public class Function
         => function;
 
     public static Function operator +(Function function, double number)
-    {   
+    {
         if (function.type == typeof(double))
             return new((double)function.function + number);
 
@@ -114,6 +126,9 @@ public class Function
         else if (function.type == typeof(Symbol))
             return new((Symbol)function.function + number);
 
+        else if (function.type == typeof(TrigonometricFunction))
+            return (TrigonometricFunction)function.function + number;
+
         throw new CnumsException();
     }
 
@@ -121,18 +136,7 @@ public class Function
         => function + number;
 
     public static Function operator +(Function function, Symbol symbol)
-    {
-        if (function.type == typeof(double))
-            return new((double)function.function + symbol);
-
-        else if (function.type == typeof(Polynomial))
-            return new((Polynomial)function.function + symbol);
-
-        else if (function.type == typeof(Symbol))
-            return new((Symbol)function.function + symbol);
-
-        throw new CnumsException();
-    }
+        => symbol + function.function;
 
     public static Function operator +(Symbol symbol, Function function)
         => function + symbol;
