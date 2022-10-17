@@ -1,4 +1,5 @@
-﻿using static cnums.Consts;
+﻿using cnums.Symbolic;
+using static cnums.Consts;
 
 namespace cnums;
 
@@ -303,5 +304,15 @@ public static partial class Maths
 
         return (v[0, 0], v[0, 1]);
     }
+
+    #region Symbolic Constructors
+
+    public static Function Sin(Symbol symbol)
+        => new Sine(new(symbol)).ToFunction();
+
+    public static Function Cos(Symbol symbol)
+        => new Cosine(new(symbol)).ToFunction();
+
+    #endregion
 }
 
