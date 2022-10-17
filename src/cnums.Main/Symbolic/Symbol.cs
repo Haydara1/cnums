@@ -2,7 +2,10 @@
 {
     public class Symbol
     {
+        #region Properties
+
         private char sym = 'x';
+
         private string subscript = "";
 
         public char Sym
@@ -16,6 +19,10 @@
             get { return subscript; }
             private set { subscript = value; }
         }
+
+        #endregion
+
+        #region Constructors
 
         public Symbol(char symbol)
         {
@@ -40,6 +47,8 @@
             this.subscript = subscript.UnicodeSubscript();
         }
 
+        #endregion
+
         public override bool Equals(object? obj)
         {
             if (obj == null 
@@ -59,6 +68,45 @@
 
         public override string ToString()
             => $"{this.Sym}{this.Subscript}";
+
+        private object AddObject(object obj) => obj.GetType().Name switch
+        {
+            nameof(Double) 
+            => this + (double)obj,
+
+            nameof(Symbol) 
+            => this + (Symbol)obj,
+
+            nameof(Polynomial) 
+            => this + (Polynomial)obj,
+
+            nameof(TrigonometricFunction)
+            => this + new Polynomial(new() { new((TrigonometricFunction) obj)} ),
+
+            nameof(SymbolContainer) 
+            => this + new Polynomial(new() { (SymbolContainer)obj} ),
+
+            _ => SwitchDefault(obj, '+'),
+        };
+
+        private object SwitchDefault(object obj, char operation)
+        {
+            if (obj is TrigonometricFunction function)
+                if(operation == '+')
+                    return this + new Polynomial(new() { new(function) });
+                else if (operation == '-')
+                    return this - new Polynomial(new() { new(function) });
+
+            throw new CnumsException();
+        }
+
+        private object SubstractObject(object obj) => obj.GetType().Name switch
+        {
+            nameof(Double) => this - (double)obj,
+            nameof(Symbol) => this - (Symbol)obj,
+            nameof(Polynomial) => this - (Polynomial)obj,
+            _ => throw new CnumsException()
+        };
 
         #region Addition.
 
@@ -80,6 +128,12 @@
 
             return new((Polynomial)addition, true);
         }
+
+        public static Function operator +(Symbol symbol, object obj)
+            => symbol.AddObject(obj).ToFunction();
+
+        public static Function operator +(object obj, Symbol symbol)
+            => symbol + obj;
 
         #endregion
 
@@ -103,6 +157,12 @@
 
             return new((Polynomial)substraction, true);
         }
+
+        public static Function operator -(Symbol symbol, object obj)
+            => symbol.SubstractObject(obj).ToFunction();
+
+        public static Function operator -(object obj, Symbol symbol)
+            => (-symbol) + obj;
 
         #endregion
 
