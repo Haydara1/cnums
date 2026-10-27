@@ -11,5 +11,5 @@
 // This class should be abstract as it will be a generic class that represents a mathematical objct.
 public abstract class Node
 {
-    // TODO implement different general functions that apply to all mathematical objects.
+    public List<Node> Children { get; } = [];
 }
