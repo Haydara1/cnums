@@ -18,4 +18,8 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\cnums.Main\cnums.Main.csproj" />
+  </ItemGroup>
+
 </Project>
