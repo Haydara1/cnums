@@ -6,5 +6,8 @@ namespace cnums.Main.CAS.Nodes;
 
 public class Symbol : Node
 {
+    /*
+     * Symbols will have no children.
+     */
     
 }

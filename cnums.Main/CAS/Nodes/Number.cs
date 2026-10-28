@@ -7,5 +7,8 @@ namespace cnums.Main.CAS.Nodes;
 
 public class Number : Node
 {
+    /*
+     * Numbers will have no children.
+     */
     
 }

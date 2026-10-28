@@ -11,5 +11,8 @@ namespace cnums.Main.CAS.Nodes;
 
 public abstract class Operator : Node
 {
+    /*
+     * Operators will have two children
+     */
     
 }
