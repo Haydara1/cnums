@@ -11,5 +11,14 @@
 // This class should be abstract as it will be a generic class that represents a mathematical objct.
 public abstract class Node
 {
-    public List<Node> Children { get; } = [];
+    private List<Node> Children { get; set; } = [];
+    
+    /// <summary>
+    /// Returns the number of nodes this node is responsible of.
+    /// </summary>
+    /// <returns>An integer number (children count).</returns>
+    public int GetChildrenCount() => Children.Count;
+    
+    
+    
 }
