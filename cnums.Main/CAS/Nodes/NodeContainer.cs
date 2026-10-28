@@ -9,3 +9,12 @@ public class NodeContainer(string storedValue) : Node
 {
    private int priority;
 }
+
+public record Priorities
+{
+   public static readonly string[] priorities =
+   {
+      "*/", // Multiplication and division.
+      "+-",  // Addition and substraction.
+   };
+}

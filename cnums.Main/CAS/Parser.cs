@@ -1,4 +1,3 @@
-using cnums.Main.CAS.Nodes.Operators;
 using cnums.Main.CAS.Nodes;
 
 namespace cnums.Main.CAS;
@@ -18,7 +17,7 @@ public class Parser
     /// <summary>
     /// Parses a given expression into a node tree.
     /// </summary>
-    /// <param name="expression">The mathematical expression written in Latex</param>
+    /// <param name="expression">The mathematical expression</param>
     /// <returns>The tree's root as a Node.</returns>
     public Node Parse(string expression)
     {
