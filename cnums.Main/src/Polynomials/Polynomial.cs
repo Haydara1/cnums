@@ -1,12 +1,13 @@
 using System.Text;
 using System.Numerics;
+using cnums.Main.Fields.Interfaces;
 
 namespace cnums.Main.Polynomials;
 
 /// <summary>
 /// Single variable polynomial
 /// </summary>
-public class Polynomial<T> where T : INumber<T>
+public class Polynomial<T> where T : IRing<T>
 {
     // Attributes
     
@@ -128,7 +129,7 @@ public class Polynomial<T> where T : INumber<T>
             {
                 T coefficient = coefficients[i];
 
-                if (coefficient == T.Zero) continue;
+                if (coefficient == T.AdditiveIdentity) continue;
 
                 sb.Append($" + ({coefficient.ToString()})x^{i}");
             }
@@ -161,7 +162,7 @@ public class Polynomial<T> where T : INumber<T>
     
     # region Public static methods
     
-    public static Polynomial<T> Zero() => new Polynomial<T>(T.Zero);
+    public static Polynomial<T> Zero() => new Polynomial<T>(T.AdditiveIdentity);
     
     # endregion
     
@@ -172,7 +173,7 @@ public class Polynomial<T> where T : INumber<T>
         int index = 0;
         
         for(int i = coefficientsNum - 1; i >= 0; i--)
-            if (coefficients[i] == T.Zero)
+            if (coefficients[i] == T.AdditiveIdentity)
                 continue;
             else
             {
@@ -189,7 +190,7 @@ public class Polynomial<T> where T : INumber<T>
         int index = 0;
         
         for(int i = coefficientsList.Length - 1; i >= 0; i--)
-            if (coefficientsList[i] == T.Zero)
+            if (coefficientsList[i] == T.AdditiveIdentity)
                 continue;
             else
             {
