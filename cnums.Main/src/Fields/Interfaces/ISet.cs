@@ -13,4 +13,11 @@ public interface ISet<TSelf> where TSelf : ISet<TSelf>
     /// <param name="a"></param>
     /// <returns></returns>
     public static abstract TSelf CreateChecked(Object a);
+    
+    /// <summary>
+    /// Checks if a string can be parsed to give an element of the given set.
+    /// </summary>
+    /// <param name="s"></param>
+    /// <returns></returns>
+    public static abstract bool CanParse(string s);
 }
