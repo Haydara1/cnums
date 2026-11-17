@@ -11,8 +11,8 @@ public class Polynomial<T> where T : INumber<T>
     // Attributes
     
     // Store the coefficients as a list, where the ith number is the coefficient to the ith degree.
-    private T[] Coefficients;
-    private int Degree;
+    private T[] coefficients;
+    private int coefficientsNum;
     
     // Constructors:
     
@@ -22,8 +22,8 @@ public class Polynomial<T> where T : INumber<T>
     /// <param name="coefficients"></param>
     public Polynomial(List<T> coefficients)
     {
-        this.Coefficients = coefficients.ToArray();
-        this.Degree = this.Coefficients.Length; 
+        this.coefficients = coefficients.ToArray();
+        this.coefficientsNum = this.coefficients.Length; 
     }
 
     /// <summary>
@@ -32,14 +32,14 @@ public class Polynomial<T> where T : INumber<T>
     /// <param name="coefficients"></param>
     public Polynomial(T[] coefficients)
     {
-        this.Coefficients = coefficients;
-        this.Degree = this.Coefficients.Length;
+        this.coefficients = coefficients;
+        this.coefficientsNum = this.coefficients.Length;
     }
 
     public Polynomial(T coefficient)
     {
-        this.Coefficients = [coefficient];
-        this.Degree = 0;
+        this.coefficients = [coefficient];
+        this.coefficientsNum = 1;
     }
 
     /// <summary>
@@ -64,16 +64,16 @@ public class Polynomial<T> where T : INumber<T>
     {
         // TODO optimize addition.
         
-        if (p1.Degree > p2.Degree) return (p2 + p1);
+        if (p1.coefficientsNum > p2.coefficientsNum) return (p2 + p1);
 
         List<T> coefficients = new List<T>();
 
-        for (int i = 0; i < p1.Degree; i++)
-            coefficients.Add(p1.Coefficients[i] + p2.Coefficients[i]);
+        for (int i = 0; i < p1.coefficientsNum; i++)
+            coefficients.Add(p1.coefficients[i] + p2.coefficients[i]);
         
         // Add the remaining coefficients:
-        for(int i = p1.Degree; i < p2.Degree; i++)
-            coefficients.Add(p2.Coefficients[i]);
+        for(int i = p1.coefficientsNum; i < p2.coefficientsNum; i++)
+            coefficients.Add(p2.coefficients[i]);
         
         return new Polynomial<T>(coefficients);
     }
@@ -89,9 +89,9 @@ public class Polynomial<T> where T : INumber<T>
     /// <returns></returns>
     public static Polynomial<T> operator *(T multiplicand, Polynomial<T> polynomial)
     {
-        T[] newCoefficients = polynomial.Coefficients;
+        T[] newCoefficients = polynomial.coefficients.Clone() as T[] ?? new T[polynomial.coefficientsNum];
         
-        for(int i = 0; i < polynomial.Degree; i++)
+        for(int i = 0; i < polynomial.coefficientsNum; i++)
             newCoefficients[i] *= multiplicand;
         
         return new Polynomial<T>(newCoefficients);
@@ -102,25 +102,105 @@ public class Polynomial<T> where T : INumber<T>
 
     public static Polynomial<T> operator *(Polynomial<T> p1, Polynomial<T> p2)
     {
-        T[] newCoefficients = new T[p2.Degree + p1.Degree];
+        T[] newCoefficients = new T[p2.coefficientsNum + p1.coefficientsNum - 1];
 
-        for (int i = 0; i < p1.Degree; i++)
-            for (int j = 0; j < newCoefficients.Length; j++)
-                newCoefficients[i + j] += p1.Coefficients[i] * p2.Coefficients[j];
+        for (int i = 0; i < p1.coefficientsNum; i++)
+            for (int j = 0; j < p2.coefficientsNum; j++)
+                newCoefficients[i + j] += p1.coefficients[i] * p2.coefficients[j];
         
         return new Polynomial<T>(newCoefficients);
     }
     
     #endregion
 
+    
+    # region Public methods
+    
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < Degree; i++)
-            sb.Append($"{Coefficients[i]}x^{i}");
-        
+        if (this.coefficientsNum == 1) sb.Append(coefficients[0]);
+
+        else
+        {
+            for (int i = 0; i < coefficientsNum; i++)
+            {
+                T coefficient = coefficients[i];
+
+                if (coefficient == T.Zero) continue;
+
+                sb.Append($" + ({coefficient.ToString()})x^{i}");
+            }
+        }
+
         return sb.ToString();
     }
     
+    /// <summary>
+    /// Returns the degree of the polynomial.
+    /// </summary>
+    /// <returns></returns>
+    public int GetDegree() => this.coefficientsNum - 1;
+
+    public bool Equals(Polynomial<T> polynomial)
+    {
+        this.ClearCoefficients();
+        polynomial.ClearCoefficients();
+        
+        if(this.coefficientsNum != polynomial.coefficientsNum) return false;
+        
+        for(int i = 0; i < this.coefficientsNum; i++)
+            if(this.coefficients[i] != polynomial.coefficients[i])
+                return false;
+        
+        return true;
+    }
+    
+    # endregion
+    
+    # region Public static methods
+    
+    public static Polynomial<T> Zero() => new Polynomial<T>(T.Zero);
+    
+    # endregion
+    
+    # region Private methods
+
+    private void ClearCoefficients()
+    {
+        int index = 0;
+        
+        for(int i = coefficientsNum - 1; i >= 0; i--)
+            if (coefficients[i] == T.Zero)
+                continue;
+            else
+            {
+                index = i;
+                break;
+            }
+        
+        coefficients = coefficients.Take(index + 1).ToArray();
+        coefficientsNum = coefficients.Length;
+    }
+
+    private T[] ClearCoefficients(T[] coefficientsList)
+    {
+        int index = 0;
+        
+        for(int i = coefficientsList.Length - 1; i >= 0; i--)
+            if (coefficientsList[i] == T.Zero)
+                continue;
+            else
+            {
+                index = i;
+                break;
+            }
+        
+        coefficientsList = coefficientsList.Take(index + 1).ToArray();
+        
+        return coefficientsList;
+    }
+    
+    # endregion
 }
