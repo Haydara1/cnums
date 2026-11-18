@@ -1,5 +1,4 @@
 using System.Text;
-using System.Numerics;
 using cnums.Main.Fields.Interfaces;
 
 namespace cnums.Main.Polynomials;
@@ -51,7 +50,6 @@ public class Polynomial<T> where T : IRing<T>
     {
         // TODO
     }
-
 
     #region Operators Overloads
 
@@ -113,7 +111,6 @@ public class Polynomial<T> where T : IRing<T>
     }
     
     #endregion
-
     
     # region Public methods
     
@@ -168,6 +165,9 @@ public class Polynomial<T> where T : IRing<T>
     
     # region Private methods
 
+    /// <summary>
+    /// Clears the zero coefficients of the polynomial.
+    /// </summary>
     private void ClearCoefficients()
     {
         int index = 0;
@@ -185,6 +185,11 @@ public class Polynomial<T> where T : IRing<T>
         coefficientsNum = coefficients.Length;
     }
 
+    /// <summary>
+    /// Clears zero coefficients of the list.
+    /// </summary>
+    /// <param name="coefficientsList"></param>
+    /// <returns></returns>
     private T[] ClearCoefficients(T[] coefficientsList)
     {
         int index = 0;
