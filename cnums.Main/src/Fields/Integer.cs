@@ -1,10 +1,10 @@
 using cnums.Main.Fields.Interfaces;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace cnums.Main.Fields;
 
 public class Integer(int value) : IRing<Integer>
 {
+    // Attributes
     private int Value { get; } = value;
 
     public static Integer AdditiveIdentity => new Integer(0);
