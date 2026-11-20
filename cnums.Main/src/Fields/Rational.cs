@@ -43,7 +43,6 @@ public class Rational(int numerator, int denominator) : IRing<Rational>
     public static Rational MultiplicativeIdentity { get; }
     
     public static Rational operator *(Rational a, Rational b)
-    {
-        throw new NotImplementedException();
-    }
+        => new(a.Numerator * b.Numerator, a.Denominator * b.Denominator);
+    
 }
